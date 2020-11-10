@@ -1,12 +1,14 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
+    "outDir": "dist",
     "declaration": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "importHelpers": true,
-    "lib": ["dom", "esnext"],
+    "lib": ["ES2019"],
     "module": "commonjs",
+    "target": "ES2019",
     "moduleResolution": "node",
     "noEmit": true,
     "noFallthroughCasesInSwitch": true,
@@ -20,5 +22,9 @@
     "sourceMap": true,
     "strict": true
   },
-  "include": ["src", "test", "types"]
+  "include": [
+    "src",
+    "test",
+    "types"
+  ]
 }
