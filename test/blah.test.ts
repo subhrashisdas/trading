@@ -1,7 +1,6 @@
 import { sum } from '@src/index';
+import { strictEqual } from 'assert';
 
-describe('blah', () => {
-  it('works', () => {
-    expect(sum(1, 1)).toEqual(2);
-  });
-});
+export function sumTest() {
+  strictEqual(sum(1, 2), 3);
+}
