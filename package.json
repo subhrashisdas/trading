@@ -18,6 +18,14 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
+  "jest": {
+    "moduleNameMapper": {
+      "^@src/(.*)$": "<rootDir>/src/$1"
+    },
+    "testMatch": [
+      "<rootDir>/test/all.test.ts"
+    ]
+  },
   "devDependencies": {
     "husky": "^4.3.0",
     "tsdx": "^0.14.1",
