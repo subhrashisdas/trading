@@ -1,15 +1,15 @@
 import { readdirSync, statSync } from 'fs';
-import * as path from 'path';
+import { join } from 'path';
 
 let files: string[] = [];
 
 function throughDirectory(Directory: string) {
   readdirSync(Directory).forEach(File => {
-    const Absolute = path.join(Directory, File);
-    if (statSync(Absolute).isDirectory()) {
-      return throughDirectory(Absolute);
+    const absolute = join(Directory, File);
+    if (statSync(absolute).isDirectory()) {
+      return throughDirectory(absolute);
     } else {
-      return files.push(Absolute);
+      return files.push(absolute);
     }
   });
 }
@@ -19,7 +19,7 @@ throughDirectory('./test');
 for (const file of files) {
   if (!__filename.includes(file)) {
     console.log(file);
-    const exports = require(path.join('../', file));
+    const exports = require(join('../', file));
     for (const [key, value] of Object.entries(exports)) {
       console.log(key);
       it(key, value as any);
