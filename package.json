@@ -11,6 +11,13 @@
       "pre-commit": "tsdx lint"
     }
   },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "prettier/@typescript-eslint",
+      "plugin:prettier/recommended"
+    ]
+  },
   "prettier": {
     "printWidth": 80,
     "semi": true,
