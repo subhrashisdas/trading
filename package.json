@@ -3,9 +3,8 @@
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "scripts": {
-    "start": "tsdx watch",
     "test": "tsdx test",
-    "lint": "tsdx lint"
+    "lint": "tsdx lint src test --fix"
   },
   "husky": {
     "hooks": {
