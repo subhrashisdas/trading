@@ -1,4 +1,14 @@
-import { differenceInMinutes, startOfMonth, startOfMinute, addMonths, parseISO } from 'date-fns';
+import {
+  differenceInMinutes,
+  startOfMonth,
+  startOfMinute,
+  startOfHour,
+  addMonths,
+  startOfWeek,
+  parseISO,
+  startOfDay,
+  startOfYear,
+} from 'date-fns';
 
 export interface Candle {
   timestamp: Date;
@@ -60,15 +70,15 @@ export function startOfInterval(timestamp: Date, interval: Interval) {
     case Interval['30minute']:
       return startOfMinute(timestamp);
     case Interval.hour:
-      return startOfMinute(timestamp);
+      return startOfHour(timestamp);
     case Interval.day:
-      return startOfMinute(timestamp);
+      return startOfDay(timestamp);
     case Interval.week:
-      return startOfMinute(timestamp);
+      return startOfWeek(timestamp);
     case Interval.month:
-      return startOfMinute(timestamp);
+      return startOfMonth(timestamp);
     case Interval.year:
-      return startOfMinute(timestamp);
+      return startOfYear(timestamp);
   }
 }
 
