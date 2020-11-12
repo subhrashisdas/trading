@@ -30,11 +30,10 @@ export function convertInterval(candles: Candle[], interval: Interval) {
     const currentProcessedCandle = newCandles.pop();
     if (maxTimeFrame && differenceInMinutes(maxTimeFrame, candle.timestamp) > 0 && currentProcessedCandle) {
       const newProcessedCandle: Candle = {
-        timestamp: startOfMonth(candle.timestamp),
+        ...currentProcessedCandle,
         high: Math.max(currentProcessedCandle.high, candle.high),
         low: Math.min(currentProcessedCandle.low, candle.low),
         open: currentProcessedCandle.open,
-        close: candle.close,
         volume: currentProcessedCandle.volume + candle.volume,
       };
       newCandles.push(newProcessedCandle);
