@@ -2,6 +2,6 @@
 !.gitignore
 !package.json
 !readme.md
-!src/*
-!test/*
+!/src/
+!/test/
 !tsconfig.json
