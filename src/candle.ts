@@ -30,7 +30,7 @@ function mergeCandle(oldCandle: Candle, newCandle: Candle): Candle {
     ...oldCandle,
     high: Math.max(oldCandle.high, newCandle.high),
     low: Math.min(oldCandle.low, newCandle.low),
-    open: oldCandle.open,
+    close: oldCandle.close,
     volume: oldCandle.volume + newCandle.volume,
   };
 }
