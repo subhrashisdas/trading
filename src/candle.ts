@@ -1,4 +1,4 @@
-import { differenceInMinutes, startOfMonth, addMonths, parseISO } from 'date-fns';
+import { differenceInMinutes, startOfMonth, startOfMinute, addMonths, parseISO } from 'date-fns';
 
 export interface Candle {
   timestamp: Date;
@@ -43,4 +43,58 @@ export function convertInterval(candles: Candle[], interval: Interval) {
     }
   }
   return newCandles;
+}
+
+export function startOfInterval(timestamp: Date, interval: Interval) {
+  switch (interval) {
+    case Interval.minute:
+      return startOfMinute(timestamp);
+    case Interval['3minute']:
+      return startOfMinute(timestamp);
+    case Interval['5minute']:
+      return startOfMinute(timestamp);
+    case Interval['10minute']:
+      return startOfMinute(timestamp);
+    case Interval['15minute']:
+      return startOfMinute(timestamp);
+    case Interval['30minute']:
+      return startOfMinute(timestamp);
+    case Interval.hour:
+      return startOfMinute(timestamp);
+    case Interval.day:
+      return startOfMinute(timestamp);
+    case Interval.week:
+      return startOfMinute(timestamp);
+    case Interval.month:
+      return startOfMinute(timestamp);
+    case Interval.year:
+      return startOfMinute(timestamp);
+  }
+}
+
+export function addInterval(timestamp: Date, interval: Interval, amount: number) {
+  switch (interval) {
+    case Interval.minute:
+      return startOfMinute(timestamp);
+    case Interval['3minute']:
+      return startOfMinute(timestamp);
+    case Interval['5minute']:
+      return startOfMinute(timestamp);
+    case Interval['10minute']:
+      return startOfMinute(timestamp);
+    case Interval['15minute']:
+      return startOfMinute(timestamp);
+    case Interval['30minute']:
+      return startOfMinute(timestamp);
+    case Interval.hour:
+      return startOfMinute(timestamp);
+    case Interval.day:
+      return startOfMinute(timestamp);
+    case Interval.week:
+      return startOfMinute(timestamp);
+    case Interval.month:
+      return startOfMinute(timestamp);
+    case Interval.year:
+      return startOfMinute(timestamp);
+  }
 }
