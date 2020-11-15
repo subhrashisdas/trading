@@ -8,5 +8,7 @@ export const DayInMs = 24 * HourInMs;
 export const WeekInMs = 7 * DayInMs;
 
 export function ceilToNearestMilliseconds(date: EpochTime, milliseconds: Milliseconds) {
-  return date - (date % milliseconds) + milliseconds + 3 * DayInMs;
+  const dateWithOffset = date + 3 * DayInMs;
+  const remainder = dateWithOffset % milliseconds;
+  return dateWithOffset - remainder + milliseconds;
 }

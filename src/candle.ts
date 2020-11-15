@@ -27,7 +27,7 @@ export function convertInterval(candles: Candle[], interval: Milliseconds) {
   let maxTimeFrame;
   for (const candle of candles) {
     const currentProcessedCandle = newCandles.pop();
-    if (maxTimeFrame && candle.timestamp > maxTimeFrame && currentProcessedCandle) {
+    if (maxTimeFrame && candle.timestamp < maxTimeFrame && currentProcessedCandle) {
       newCandles.push(mergeCandle(currentProcessedCandle, candle));
     } else {
       maxTimeFrame = ceilToNearestMilliseconds(candle.timestamp, interval);
