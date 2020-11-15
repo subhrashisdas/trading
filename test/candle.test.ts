@@ -1,12 +1,17 @@
 import { convertInterval, convertOhlvcCandlesToTradeJson } from '@src/candle';
-import { MinuteInMs } from '@src/date';
+import { DayInMs, MinuteInMs } from '@src/date';
 import { deepStrictEqual } from 'assert';
 
-import { fifteenMinuteCandles, thirtyMinuteCandles } from '@test/fixtures/candles';
+import { dailyCandles, fifteenMinuteCandles, thirtyMinuteCandles } from '@test/fixtures/candles';
 
 export function convertIntervalTest() {
   deepStrictEqual(
     convertInterval(convertOhlvcCandlesToTradeJson(fifteenMinuteCandles), 30 * MinuteInMs),
     convertOhlvcCandlesToTradeJson(thirtyMinuteCandles)
+  );
+
+  deepStrictEqual(
+    convertInterval(convertOhlvcCandlesToTradeJson(fifteenMinuteCandles), DayInMs),
+    convertOhlvcCandlesToTradeJson(dailyCandles)
   );
 }
