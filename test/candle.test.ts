@@ -1,10 +1,9 @@
-import { Candle, convertInterval } from '@src/candle';
-import { MinuteInMs } from '@src/date';
+import { convertInterval, convertOhlvcCandlesToTradeJson } from '@src/candle';
+import { HourInMs } from '@src/date';
 import { deepStrictEqual } from 'assert';
 
+import { fifteenMinuteCandles, hourCandles } from '@test/fixtures/candles';
+
 export function convertIntervalTest() {
-  const oneMinuteCandles: Candle[] = [];
-  const fiveMinuteCandles: Candle[] = [];
-  convertInterval(oneMinuteCandles, MinuteInMs);
-  deepStrictEqual(oneMinuteCandles, fiveMinuteCandles);
+  deepStrictEqual(convertInterval(convertOhlvcCandlesToTradeJson(fifteenMinuteCandles), HourInMs), hourCandles);
 }

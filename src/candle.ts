@@ -9,7 +9,7 @@ export interface Candle {
   volume: number;
 }
 
-export type OhlvcCandle = [string, number, number, number, number, number];
+export type OhlvcCandle = [string, number, number, number, number, number, number];
 
 function mergeCandle(oldCandle: Candle, newCandle: Candle): Candle {
   return {
