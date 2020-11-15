@@ -9,6 +9,8 @@ export interface Candle {
   volume: number;
 }
 
+export type OhlvcCandle = [string, number, number, number, number, number];
+
 export function convertInterval(candles: Candle[], interval: Milliseconds) {
   const newCandles: Candle[] = [];
   let maxTimeFrame;
@@ -22,6 +24,17 @@ export function convertInterval(candles: Candle[], interval: Milliseconds) {
     }
   }
   return newCandles;
+}
+
+export function convertOhlvcCandleToTradeJson(ohlvcCandle: OhlvcCandle) {
+  return {
+    timestamp: Date.parse(ohlvcCandle[0]),
+    open: ohlvcCandle[1],
+    high: ohlvcCandle[2],
+    low: ohlvcCandle[3],
+    close: ohlvcCandle[4],
+    volume: ohlvcCandle[5],
+  };
 }
 
 function mergeCandle(oldCandle: Candle, newCandle: Candle): Candle {
