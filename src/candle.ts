@@ -1,8 +1,7 @@
-import { differenceInMinutes } from 'date-fns';
-import { ceilOfInterval, TimeUnit } from '@src/date';
+import { ceilToNearestMilliseconds, Milliseconds } from '@src/date';
 
 export interface Candle {
-  timestamp: Date;
+  timestamp: number;
   open: number;
   high: number;
   low: number;
@@ -10,15 +9,15 @@ export interface Candle {
   volume: number;
 }
 
-export function convertInterval(candles: Candle[], interval: number, timeUnit: TimeUnit) {
+export function convertInterval(candles: Candle[], interval: Milliseconds) {
   const newCandles: Candle[] = [];
   let maxTimeFrame;
   for (const candle of candles) {
     const currentProcessedCandle = newCandles.pop();
-    if (maxTimeFrame && differenceInMinutes(maxTimeFrame, candle.timestamp) > 0 && currentProcessedCandle) {
+    if (maxTimeFrame && candle.timestamp > maxTimeFrame && currentProcessedCandle) {
       newCandles.push(mergeCandle(currentProcessedCandle, candle));
     } else {
-      maxTimeFrame = ceilOfInterval(candle.timestamp, interval, timeUnit);
+      maxTimeFrame = ceilToNearestMilliseconds(candle.timestamp, interval);
       newCandles.push(candle);
     }
   }
@@ -27,10 +26,11 @@ export function convertInterval(candles: Candle[], interval: number, timeUnit: T
 
 function mergeCandle(oldCandle: Candle, newCandle: Candle): Candle {
   return {
-    ...oldCandle,
+    timestamp: oldCandle.timestamp,
+    open: oldCandle.open,
     high: Math.max(oldCandle.high, newCandle.high),
     low: Math.min(oldCandle.low, newCandle.low),
-    close: oldCandle.close,
+    close: newCandle.close,
     volume: oldCandle.volume + newCandle.volume,
   };
 }
