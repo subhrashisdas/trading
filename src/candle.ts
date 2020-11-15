@@ -11,6 +11,17 @@ export interface Candle {
 
 export type OhlvcCandle = [string, number, number, number, number, number];
 
+function mergeCandle(oldCandle: Candle, newCandle: Candle): Candle {
+  return {
+    timestamp: oldCandle.timestamp,
+    open: oldCandle.open,
+    high: Math.max(oldCandle.high, newCandle.high),
+    low: Math.min(oldCandle.low, newCandle.low),
+    close: newCandle.close,
+    volume: oldCandle.volume + newCandle.volume,
+  };
+}
+
 export function convertInterval(candles: Candle[], interval: Milliseconds) {
   const newCandles: Candle[] = [];
   let maxTimeFrame;
@@ -26,7 +37,7 @@ export function convertInterval(candles: Candle[], interval: Milliseconds) {
   return newCandles;
 }
 
-export function convertOhlvcCandleToTradeJson(ohlvcCandle: OhlvcCandle) {
+function convertOhlvcCandleToTradeJson(ohlvcCandle: OhlvcCandle) {
   return {
     timestamp: Date.parse(ohlvcCandle[0]),
     open: ohlvcCandle[1],
@@ -37,13 +48,6 @@ export function convertOhlvcCandleToTradeJson(ohlvcCandle: OhlvcCandle) {
   };
 }
 
-function mergeCandle(oldCandle: Candle, newCandle: Candle): Candle {
-  return {
-    timestamp: oldCandle.timestamp,
-    open: oldCandle.open,
-    high: Math.max(oldCandle.high, newCandle.high),
-    low: Math.min(oldCandle.low, newCandle.low),
-    close: newCandle.close,
-    volume: oldCandle.volume + newCandle.volume,
-  };
+export function convertOhlvcCandlesToTradeJson(ohlvcCandles: OhlvcCandle[]) {
+  return ohlvcCandles.map(convertOhlvcCandleToTradeJson);
 }
