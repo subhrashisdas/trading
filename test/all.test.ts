@@ -17,7 +17,7 @@ function throughDirectory(Directory: string) {
 throughDirectory('./test');
 
 for (const file of files) {
-  if (!__filename.includes(file)) {
+  if (!__filename.includes(file) && file.includes('.test.')) {
     const exports = require(join('../', file));
     for (const [key, value] of Object.entries(exports)) {
       it(key, value as any);

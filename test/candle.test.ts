@@ -5,5 +5,8 @@ import { deepStrictEqual } from 'assert';
 import { fifteenMinuteCandles, hourCandles } from '@test/fixtures/candles';
 
 export function convertIntervalTest() {
-  deepStrictEqual(convertInterval(convertOhlvcCandlesToTradeJson(fifteenMinuteCandles), HourInMs), hourCandles);
+  deepStrictEqual(
+    convertInterval(convertOhlvcCandlesToTradeJson(fifteenMinuteCandles), HourInMs),
+    convertOhlvcCandlesToTradeJson(hourCandles)
+  );
 }
