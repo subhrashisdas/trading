@@ -9,6 +9,6 @@ export function ceilToNearestMillisecondsTest() {
 
   deepStrictEqual(
     new Date(ceilToNearestMilliseconds(1604979900000, HourInMs)).toISOString(),
-    new Date('2020-11-10T04:00:00.0Z').toISOString()
+    new Date('2020-11-10T04:00:00.000Z').toISOString()
   );
 }
