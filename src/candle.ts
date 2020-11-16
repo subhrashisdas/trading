@@ -1,4 +1,5 @@
 import { ceilToNearestMilliseconds, Milliseconds } from '@src/date';
+import { inRange } from 'lodash';
 
 export interface Candle {
   timestamp: number;
@@ -52,4 +53,26 @@ function convertOhlvcCandleToTradeJson(ohlvcCandle: OhlvcCandle) {
 
 export function convertOhlvcCandlesToTradeJson(ohlvcCandles: OhlvcCandle[]) {
   return ohlvcCandles.map(convertOhlvcCandleToTradeJson);
+}
+
+export function trendCandles(candles: Candle[]) {
+  let dominatingCandle = candles.shift();
+  if (!dominatingCandle) {
+    return;
+  }
+  for (const currentCandle of candles) {
+    dominatingCandle = trendCandle(dominatingCandle, currentCandle);
+  }
+  return dominatingCandle;
+}
+
+export function trendCandle(dominatingCandle: Candle, currentCandle: Candle) {
+  if (
+    inRange(currentCandle.close, dominatingCandle.open, dominatingCandle.close) ||
+    inRange(currentCandle.close, dominatingCandle.close, currentCandle.open)
+  ) {
+    return dominatingCandle;
+  }
+
+  return currentCandle;
 }
