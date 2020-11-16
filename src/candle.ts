@@ -67,12 +67,8 @@ export function trendCandles(candles: Candle[]) {
 }
 
 export function trendCandle(dominatingCandle: Candle, currentCandle: Candle) {
-  if (
-    inRange(currentCandle.close, dominatingCandle.open, dominatingCandle.close) ||
+  return inRange(currentCandle.close, dominatingCandle.open, dominatingCandle.close) ||
     inRange(currentCandle.close, dominatingCandle.close, currentCandle.open)
-  ) {
-    return dominatingCandle;
-  }
-
-  return currentCandle;
+    ? dominatingCandle
+    : currentCandle;
 }
