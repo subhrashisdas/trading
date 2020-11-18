@@ -7,14 +7,14 @@ import envData from '../.env.json';
 const folderLocation = '../.cache/token.txt';
 
 interface Config {
-  userId: string;
-  password: string;
-  pin: string;
+  readonly userId: string;
+  readonly password: string;
+  readonly pin: string;
 }
 
 interface LoginData {
-  cookies?: string;
-  requestId: string;
+  readonly cookies: string;
+  readonly requestId: string;
 }
 
 function objectToForm(params: object) {
