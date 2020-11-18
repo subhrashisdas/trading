@@ -1,8 +1,8 @@
 import { writeFile, readFile } from 'fs/promises';
-import { post } from 'got';
+import got from 'got';
+import envData from '../.env.json';
 
-const folderLocation = '.cache/credentials.json';
-const envLocation = '../env.json';
+const folderLocation = '../.cache/token.txt';
 
 interface Config {
   userId: string;
@@ -11,12 +11,12 @@ interface Config {
 }
 
 interface LoginData {
-  cookies: string;
+  cookies?: string[];
   requestId: string;
 }
 
 async function login(config: Config) {
-  const { body, headers } = await post('https://kite.zerodha.com/api/login', {
+  const { body, headers } = await got.post('https://kite.zerodha.com/api/login', {
     form: {
       user_id: config.userId,
       password: config.password,
@@ -25,13 +25,13 @@ async function login(config: Config) {
   });
 
   return {
-    requestId: body.data['request_id'],
+    requestId: (body as any)?.data?.request_id,
     cookies: headers['set-cookie'],
   };
 }
 
 async function twoFa(config: Config, loginData: LoginData) {
-  const { body, headers } = await post('https://kite.zerodha.com/api/twofa', {
+  const { body, headers } = await got.post('https://kite.zerodha.com/api/twofa', {
     headers: {
       cookie: loginData.cookies,
     },
@@ -44,7 +44,7 @@ async function twoFa(config: Config, loginData: LoginData) {
   });
 
   return {
-    authorization: `enctoken ${JSON.stringify(headers).match('enctoken=(.*); path')[1]}`,
+    authorization: `enctoken ${JSON.stringify(headers).match('enctoken=(.*); path')?.[1]}`,
   };
 }
 
@@ -58,9 +58,11 @@ async function generateCredentials(config: Config) {
 }
 
 export async function createCredentials() {
-  await writeFile(folderLocation, JSON.stringify(await generateCredentials()));
+  await writeFile(folderLocation, JSON.stringify(await generateCredentials(envData)));
 }
 
 export async function getCredentials() {
   return JSON.parse((await readFile(folderLocation)).toString());
 }
+
+createCredentials().then().catch(console.log)
