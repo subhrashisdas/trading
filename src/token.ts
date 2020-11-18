@@ -14,8 +14,8 @@ interface Config {
 }
 
 interface LoginData {
-  readonly cookies: string;
-  readonly requestId: string;
+  readonly kfSession: string;
+  readonly requestId?: string;
 }
 
 function objectToForm(params: object) {
@@ -38,8 +38,8 @@ async function login(config: Config) {
   const body = await response.json();
 
   return {
-    requestId: (body as any)?.data?.request_id,
-    cookies: response.headers.get('set-cookie') as string,
+    requestId: (body as any)?.data?.request_id as string,
+    kfSession: response.headers.get('set-cookie')?.match('kf_session=(.*);')?.[1] as string,
   };
 }
 
@@ -47,7 +47,7 @@ async function twoFa(config: Config, loginData: LoginData) {
   const response = await fetch('https://kite.zerodha.com/api/twofa', {
     method: 'POST',
     headers: {
-      cookie: loginData.cookies as string,
+      cookie: `kf_session=${loginData.kfSession}`,
     },
     body: objectToForm({
       user_id: config.userId,
@@ -57,7 +57,7 @@ async function twoFa(config: Config, loginData: LoginData) {
   });
 
   return {
-    authorization: `enctoken ${JSON.stringify(response.headers).match('enctoken=(.*); path')?.[1]}`,
+    authorization: `enctoken ${JSON.stringify(response.headers.get('set-cookie')).match('enctoken=(.*);')?.[1]}`,
   };
 }
 
@@ -77,5 +77,3 @@ export async function createCredentials() {
 export async function getCredentials() {
   return JSON.parse((await readFile(folderLocation)).toString());
 }
-
-createCredentials().then().catch(console.log);
