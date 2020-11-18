@@ -1,5 +1,7 @@
 import { writeFile, readFile } from 'fs/promises';
-import got from 'got';
+import fetch from 'node-fetch';
+import { URLSearchParams } from 'url';
+
 import envData from '../.env.json';
 
 const folderLocation = '../.cache/token.txt';
@@ -11,40 +13,50 @@ interface Config {
 }
 
 interface LoginData {
-  cookies?: string[];
+  cookies?: string;
   requestId: string;
 }
 
+function objectToForm(params: object) {
+  const form = new URLSearchParams();
+  for (const [key, value] of Object.entries(params)) {
+    form.append(key, value);
+  }
+  return form;
+}
+
 async function login(config: Config) {
-  const { body, headers } = await got.post('https://kite.zerodha.com/api/login', {
-    form: {
+  const response = await fetch('https://kite.zerodha.com/api/login', {
+    method: 'POST',
+    body: objectToForm({
       user_id: config.userId,
       password: config.password,
-    },
-    responseType: 'json',
+    }),
   });
+
+  const body = await response.json();
 
   return {
     requestId: (body as any)?.data?.request_id,
-    cookies: headers['set-cookie'],
+    cookies: (response.headers as any)?.['set-cookie'],
   };
 }
 
 async function twoFa(config: Config, loginData: LoginData) {
-  const { body, headers } = await got.post('https://kite.zerodha.com/api/twofa', {
+  const response = await fetch('https://kite.zerodha.com/api/twofa', {
+    method: 'POST',
     headers: {
-      cookie: loginData.cookies,
+      cookie: loginData.cookies as string,
     },
-    form: {
+    body: objectToForm({
       user_id: config.userId,
       request_id: loginData.requestId,
       twofa_value: config.pin,
-    },
-    responseType: 'json',
+    }),
   });
 
   return {
-    authorization: `enctoken ${JSON.stringify(headers).match('enctoken=(.*); path')?.[1]}`,
+    authorization: `enctoken ${JSON.stringify(response.headers).match('enctoken=(.*); path')?.[1]}`,
   };
 }
 
@@ -65,4 +77,4 @@ export async function getCredentials() {
   return JSON.parse((await readFile(folderLocation)).toString());
 }
 
-createCredentials().then().catch(console.log)
+createCredentials().then().catch(console.log);
