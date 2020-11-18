@@ -1,10 +1,11 @@
 import { writeFile, readFile } from 'fs/promises';
-import fetch from 'node-fetch';
+import fetch, { Headers } from 'node-fetch';
+import path from 'path';
 import { URLSearchParams } from 'url';
 
 import envData from '../.env.json';
 
-const folderLocation = '../.cache/token.txt';
+const folderLocation = path.join(__filename, '../../.cache/token.txt');
 
 interface Config {
   readonly userId: string;
@@ -38,7 +39,7 @@ async function login(config: Config) {
 
   return {
     requestId: (body as any)?.data?.request_id,
-    cookies: (response.headers as any)?.['set-cookie'],
+    cookies: response.headers.get('set-cookie') as string,
   };
 }
 
