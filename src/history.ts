@@ -13,8 +13,6 @@ export async function candlestick(instrumentId: number, from: number, to: number
     oi: 0,
   });
 
-  console.log(credentials.authorization);
-
   const response = await fetch(`https://kite.zerodha.com/oms/instruments/historical/${instrumentId}/minute?${params}`, {
     method: 'GET',
     headers: {
