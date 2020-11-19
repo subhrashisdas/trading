@@ -1,9 +1,8 @@
 import { createCredentials, getCredentials } from '@src/token';
+import { ok } from 'assert';
 
-export async function createCredentialsTest() {
+export async function createAndGetCredentialsTest() {
   await createCredentials();
-}
-
-export async function getCredentialsTest() {
-  await getCredentialsTest();
+  const credentials = await getCredentials();
+  ok(credentials.authorization.includes('enctoken'));
 }

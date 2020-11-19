@@ -57,7 +57,7 @@ async function twoFa(config: Config, loginData: LoginData) {
   });
 
   return {
-    authorization: `enctoken ${JSON.stringify(response.headers.get('set-cookie')).match('enctoken=(.*);')?.[1]}`,
+    authorization: `enctoken ${JSON.stringify(response.headers.get('set-cookie')).match('enctoken=(.*); path=')?.[1]}`,
   };
 }
 
