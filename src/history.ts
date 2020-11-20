@@ -2,10 +2,19 @@ import fetch from 'node-fetch';
 import querystring from 'querystring';
 import { getCredentials } from '@src/token';
 import { format } from 'date-fns';
+import { Milliseconds, WeekInMs } from './date';
+import { Candle } from './candle';
 
-export async function history(instrumentId: number, limit: number, offset: number) {}
+export async function history(instrumentId: number, from: Milliseconds, to: Milliseconds) {
+  const candles: Candle[] = [];
+  for (let newFrom = from; newFrom <= to; newFrom += 8 * WeekInMs) {
+    const newTo = newFrom + 8 * WeekInMs;
+    candles.push(await candlestick(instrumentId, newFrom, newTo));
+  }
+  return candles;
+}
 
-export async function candlestick(instrumentId: number, from: number, to: number) {
+export async function candlestick(instrumentId: number, from: Milliseconds, to: Milliseconds) {
   const credentials = await getCredentials();
   const params = querystring.stringify({
     from: format(from, 'yyyy-MM-dd'),
