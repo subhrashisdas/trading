@@ -1,5 +1,5 @@
 import { writeFile, readFile } from 'fs/promises';
-import fetch, { Headers } from 'node-fetch';
+import fetch from 'node-fetch';
 import path from 'path';
 import { URLSearchParams } from 'url';
 

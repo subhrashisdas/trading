@@ -1,4 +1,4 @@
-import { ceilToNearestMilliseconds, Milliseconds } from '@src/date';
+import { Milliseconds } from '@src/date';
 import { inRange } from 'lodash';
 
 export interface Candle {
