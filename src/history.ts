@@ -2,8 +2,8 @@ import fetch from 'node-fetch';
 import querystring from 'querystring';
 import { getCredentials } from '@src/token';
 import { format } from 'date-fns';
-import { Milliseconds, WeekInMs } from './date';
-import { Candle } from './candle';
+import { Milliseconds, WeekInMs } from '@src/date';
+import { Candle } from '@src/candle';
 
 export async function history(instrumentId: number, from: Milliseconds, to: Milliseconds) {
   const candles: Candle[] = [];

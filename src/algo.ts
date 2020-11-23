@@ -1,5 +1,5 @@
 import { Candle } from '@src/candle';
-import { WeekInMs } from './date';
+import { WeekInMs } from '@src/date';
 
 export const candlesLimit = WeekInMs;
 
