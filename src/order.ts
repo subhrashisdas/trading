@@ -1,3 +1,6 @@
+import fetch from 'node-fetch';
+import { getCredentials } from '@src/token';
+
 export interface Order {
   placed_by: string;
   order_id: string;
@@ -29,4 +32,17 @@ export interface Order {
   meta: object;
   tag: null;
   guid: string;
+}
+
+export async function getOrders(): Promise<Order[]> {
+  const credentials = await getCredentials();
+
+  const response = await fetch('https://kite.zerodha.com/oms/orders', {
+    headers: {
+      authorization: credentials.authorization,
+    },
+  });
+
+  const body = await response.json();
+  return body?.data as Order[];
 }
