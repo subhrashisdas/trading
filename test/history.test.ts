@@ -8,7 +8,7 @@ export async function candlestickTest() {
 
 export async function normalHistoryTest() {
   const candlestickData = await history(263433, new Date('2020-10-05').getTime(), new Date('2020-10-05').getTime());
-  ok(candlestickData.length >= 375);
+  ok(candlestickData.length === 375);
 }
 
 export async function getOptimizedHistoryTest() {
