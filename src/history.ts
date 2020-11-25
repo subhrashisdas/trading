@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
 import querystring from 'querystring';
-import { writeFile, readFile, exists } from 'fs/promises';
+import { writeFile, readFile } from 'fs/promises';
 import path from 'path';
 import { getCredentials } from '@src/token';
 import { format } from 'date-fns';
@@ -52,7 +52,7 @@ export async function getOptimizedHistory(
 ): Promise<Candle[]> {
   const instrumentIdFilePath = filePath(instrumentId);
   const candles: Candle[] = [];
-  if (exists(instrumentIdFilePath)) {
+  if (/****/ instrumentIdFilePath) {
     const data = await (await readFile(instrumentIdFilePath)).toJSON;
     candles.push(...((data as unknown) as Candle[]));
   }
