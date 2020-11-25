@@ -18,7 +18,7 @@ export async function history(instrumentId: number, from: Milliseconds, to: Mill
   return convertOhlvcCandlesToTradeJson(candles);
 }
 
-const folderLocation = path.join(__filename, '../../.cache/token.txt');
+const folderLocation = path.join(__filename, '../../.cache/');
 
 export async function candlestick(instrumentId: number, from: Milliseconds, to: Milliseconds) {
   const credentials = await getCredentials();
@@ -54,7 +54,7 @@ export async function getOptimizedHistory(
 ): Promise<Candle[]> {
   const instrumentIdFilePath = filePath(instrumentId);
   const candles: Candle[] = [];
-  if (exists(instrumentIdFilePath)) {
+  if (await exists(instrumentIdFilePath)) {
     const data = await (await readFile(instrumentIdFilePath)).toJSON;
     candles.push(...((data as unknown) as Candle[]));
   }
@@ -71,7 +71,7 @@ export async function getOptimizedHistory(
   }
 
   if (firstCandle || lastCandle) {
-    await writeFile(instrumentIdFilePath, JSON.stringify(candles));
+    await writeFile(instrumentIdFilePath, JSON.stringify(candles), {flag: 'wx'});
   }
 
   return candles;
