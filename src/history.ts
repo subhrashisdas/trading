@@ -5,7 +5,7 @@ import { exists } from '@src/fs';
 import path from 'path';
 import { getCredentials } from '@src/token';
 import { format } from 'date-fns';
-import { Milliseconds, WeekInMs } from '@src/date';
+import { DayInMs, Milliseconds, WeekInMs } from '@src/date';
 import { Candle, convertOhlvcCandlesToTradeJson } from '@src/candle';
 
 export async function history(instrumentId: number, from: Milliseconds, to: Milliseconds) {
@@ -59,19 +59,27 @@ export async function getOptimizedHistory(
     candles.push(...((data as unknown) as Candle[]));
   }
 
+  const candlesLength = candles.length - 1;
   const firstCandle = candles[0];
-  const lastCandle = candles[candles.length - 1];
+  const lastCandle = candles[candlesLength];
+
+  if (!firstCandle && !lastCandle) {
+    const allCandles = await history(instrumentId, from, to);
+    candles.push(...allCandles);
+  }
 
   if (firstCandle) {
-    candles.push(...[]);
+    const leftCandles = await history(instrumentId, from, firstCandle.timestamp - DayInMs);
+    candles.unshift(...leftCandles);
   }
 
   if (lastCandle) {
-    candles.push(...[]);
+    const rightCandles = await history(instrumentId, lastCandle.timestamp, to);
+    candles.push(...rightCandles);
   }
 
-  if (firstCandle || lastCandle) {
-    await writeFile(instrumentIdFilePath, JSON.stringify(candles), {flag: 'wx'});
+  if (candlesLength !== candles.length) {
+    await writeFile(instrumentIdFilePath, JSON.stringify(candles), { flag: 'wx' });
   }
 
   return candles;
