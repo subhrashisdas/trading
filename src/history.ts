@@ -1,20 +1,21 @@
 import fetch from 'node-fetch';
 import querystring from 'querystring';
 import { writeFile, readFile } from 'fs/promises';
+import { exists } from '@src/fs';
 import path from 'path';
 import { getCredentials } from '@src/token';
 import { format } from 'date-fns';
 import { Milliseconds, WeekInMs } from '@src/date';
-import { Candle } from '@src/candle';
+import { Candle, convertOhlvcCandlesToTradeJson } from '@src/candle';
 
 export async function history(instrumentId: number, from: Milliseconds, to: Milliseconds) {
-  const candles: Candle[] = [];
+  const candles = [];
   for (let newFrom = from; newFrom <= to; newFrom += 8 * WeekInMs) {
     const possibleNewTo = newFrom + 8 * WeekInMs;
     const newTo = possibleNewTo > to ? to : possibleNewTo;
     candles.push(...(await candlestick(instrumentId, newFrom, newTo)));
   }
-  return candles;
+  return convertOhlvcCandlesToTradeJson(candles);
 }
 
 const folderLocation = path.join(__filename, '../../.cache/token.txt');
@@ -53,7 +54,7 @@ export async function getOptimizedHistory(
 ): Promise<Candle[]> {
   const instrumentIdFilePath = filePath(instrumentId);
   const candles: Candle[] = [];
-  if (/****/ instrumentIdFilePath) {
+  if (exists(instrumentIdFilePath)) {
     const data = await (await readFile(instrumentIdFilePath)).toJSON;
     candles.push(...((data as unknown) as Candle[]));
   }
