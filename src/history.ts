@@ -10,7 +10,8 @@ import { Candle } from '@src/candle';
 export async function history(instrumentId: number, from: Milliseconds, to: Milliseconds) {
   const candles: Candle[] = [];
   for (let newFrom = from; newFrom <= to; newFrom += 8 * WeekInMs) {
-    const newTo = newFrom + 8 * WeekInMs;
+    const possibleNewTo = newFrom + 8 * WeekInMs;
+    const newTo = possibleNewTo > to ? to : possibleNewTo;
     candles.push(...(await candlestick(instrumentId, newFrom, newTo)));
   }
   return candles;
