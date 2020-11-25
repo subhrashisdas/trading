@@ -6,7 +6,7 @@ export async function candlestickTest() {
   ok(candlestickData.length > 0);
 }
 
-export async function historyTest() {
+export async function normalHistoryTest() {
   const candlestickData = await history(263433, new Date('2020-10-05').getTime(), new Date('2020-10-05').getTime());
   ok(candlestickData.length > 0);
 }

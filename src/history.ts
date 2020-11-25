@@ -11,7 +11,7 @@ export async function history(instrumentId: number, from: Milliseconds, to: Mill
   const candles: Candle[] = [];
   for (let newFrom = from; newFrom <= to; newFrom += 8 * WeekInMs) {
     const newTo = newFrom + 8 * WeekInMs;
-    candles.push(await candlestick(instrumentId, newFrom, newTo));
+    candles.push(...(await candlestick(instrumentId, newFrom, newTo)));
   }
   return candles;
 }
