@@ -1,5 +1,7 @@
 import fetch from 'node-fetch';
 import querystring from 'querystring';
+import { writeFile, readFile, exists } from 'fs/promises';
+import path from 'path';
 import { getCredentials } from '@src/token';
 import { format } from 'date-fns';
 import { Milliseconds, WeekInMs } from '@src/date';
@@ -13,6 +15,8 @@ export async function history(instrumentId: number, from: Milliseconds, to: Mill
   }
   return candles;
 }
+
+const folderLocation = path.join(__filename, '../../.cache/token.txt');
 
 export async function candlestick(instrumentId: number, from: Milliseconds, to: Milliseconds) {
   const credentials = await getCredentials();
@@ -31,4 +35,42 @@ export async function candlestick(instrumentId: number, from: Milliseconds, to: 
 
   const body = await response.json();
   return body?.data?.candles;
+}
+
+function fileName(instrumentId: number) {
+  return `historical-${instrumentId}.json`;
+}
+
+function filePath(instrumentId: number) {
+  return path.join(folderLocation, fileName(instrumentId));
+}
+
+export async function getOptimizedHistory(
+  instrumentId: number,
+  from: Milliseconds,
+  to: Milliseconds
+): Promise<Candle[]> {
+  const instrumentIdFilePath = filePath(instrumentId);
+  const candles: Candle[] = [];
+  if (exists(instrumentIdFilePath)) {
+    const data = await (await readFile(instrumentIdFilePath)).toJSON;
+    candles.push(...((data as unknown) as Candle[]));
+  }
+
+  const firstCandle = candles[0];
+  const lastCandle = candles[candles.length - 1];
+
+  if (firstCandle) {
+    candles.push(...[]);
+  }
+
+  if (lastCandle) {
+    candles.push(...[]);
+  }
+
+  if (firstCandle || lastCandle) {
+    await writeFile(instrumentIdFilePath, JSON.stringify(candles));
+  }
+
+  return candles;
 }
