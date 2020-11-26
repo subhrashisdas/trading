@@ -7,6 +7,7 @@ import { getCredentials } from '@src/token';
 import { format } from 'date-fns';
 import { DayInMs, Milliseconds, WeekInMs } from '@src/date';
 import { Candle, convertOhlvcCandlesToTradeJson } from '@src/candle';
+import { inRange } from 'lodash';
 
 export async function history(instrumentId: number, from: Milliseconds, to: Milliseconds) {
   const candles = [];
@@ -53,34 +54,29 @@ export async function getOptimizedHistory(
   to: Milliseconds
 ): Promise<Candle[]> {
   const instrumentIdFilePath = filePath(instrumentId);
-  const candles: Candle[] = [];
+
   if (await exists(instrumentIdFilePath)) {
-    const data = await (await readFile(instrumentIdFilePath)).toJSON;
-    candles.push(...((data as unknown) as Candle[]));
+    const data: any = await (await readFile(instrumentIdFilePath)).toJSON;
+    const candles: Candle[] = data.candle;
+
+    if (from < data.from) {
+      const leftCandles = await history(instrumentId, from, data.from - DayInMs);
+      candles.unshift(...leftCandles);
+    }
+
+    if (to > data.to) {
+      const rightCandles = await history(instrumentId, data.to, to);
+      candles.push(...rightCandles);
+    }
+
+    return filterCandles(candles, from, to);
+  } else {
+    const candles: Candle[] = await history(instrumentId, from, to);
+    await writeFile(instrumentIdFilePath, JSON.stringify({ from, to, candles, instrumentId }), { flag: 'wx' });
+    return filterCandles(candles, from, to);
   }
+}
 
-  const candlesLength = candles.length - 1;
-  const firstCandle = candles[0];
-  const lastCandle = candles[candlesLength];
-
-  if (!firstCandle && !lastCandle) {
-    const allCandles = await history(instrumentId, from, to);
-    candles.push(...allCandles);
-  }
-
-  if (firstCandle) {
-    const leftCandles = await history(instrumentId, from, firstCandle.timestamp - DayInMs);
-    candles.unshift(...leftCandles);
-  }
-
-  if (lastCandle) {
-    const rightCandles = await history(instrumentId, lastCandle.timestamp, to);
-    candles.push(...rightCandles);
-  }
-
-  if (candlesLength !== candles.length) {
-    await writeFile(instrumentIdFilePath, JSON.stringify(candles), { flag: 'wx' });
-  }
-
-  return candles;
+export function filterCandles(candles: Candle[], from: Milliseconds, to: Milliseconds) {
+  return candles.filter((candle) => inRange(candle.timestamp, from, to));
 }
