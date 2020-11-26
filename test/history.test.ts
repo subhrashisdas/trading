@@ -1,5 +1,8 @@
-import { candlestick, history, getOptimizedHistory } from '@src/history';
-import { ok } from 'assert';
+import { convertOhlvcCandlesToTradeJson } from '@src/candle';
+import { candlestick, history, getOptimizedHistory, filterCandles } from '@src/history';
+import { ok, deepStrictEqual } from 'assert';
+import { fifteenMinuteCandles } from '@test/fixtures/candles';
+import { slice } from 'lodash';
 
 export async function candlestickTest() {
   const candlestickData = await candlestick(263433, new Date('2020-10-05').getTime(), new Date('2020-10-05').getTime());
@@ -19,4 +22,11 @@ export async function getOptimizedHistoryTest() {
   );
   console.log(JSON.stringify(candlestickData));
   ok(candlestickData.length > 0);
+}
+
+export async function filterCandlesTest() {
+  const candles = convertOhlvcCandlesToTradeJson(fifteenMinuteCandles);
+  const from = candles[candles.length - 3].timestamp;
+  const to = candles[candles.length - 1].timestamp;
+  deepStrictEqual(filterCandles(candles, from, to), slice(candles, candles.length - 3, candles.length - 1));
 }
