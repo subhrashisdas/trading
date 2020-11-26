@@ -1,5 +1,5 @@
 import { convertOhlvcCandlesToTradeJson } from '@src/candle';
-import { candlestick, history, getOptimizedHistory, filterCandles } from '@src/history';
+import { candlestick, history, getOptimizedHistory, filterCandles, invalidateCache } from '@src/history';
 import { ok, deepStrictEqual } from 'assert';
 import { fifteenMinuteCandles } from '@test/fixtures/candles';
 import { slice } from 'lodash';
@@ -15,12 +15,13 @@ export async function normalHistoryTest() {
 }
 
 export async function getOptimizedHistoryTest() {
+  const instrumentId = 263433;
+  await invalidateCache(instrumentId);
   const candlestickData = await getOptimizedHistory(
-    263433,
+    instrumentId,
     new Date('2020-10-05').getTime(),
-    new Date('2020-10-05').getTime()
+    new Date('2020-10-06').getTime()
   );
-  console.log(JSON.stringify(candlestickData));
   ok(candlestickData.length > 0);
 }
 

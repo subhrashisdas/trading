@@ -1,7 +1,7 @@
 import fetch from 'node-fetch';
 import querystring from 'querystring';
 import { writeFile, readFile } from 'fs/promises';
-import { exists } from '@src/fs';
+import { deleteFile, exists } from '@src/fs';
 import path from 'path';
 import { getCredentials } from '@src/token';
 import { format } from 'date-fns';
@@ -79,4 +79,9 @@ export async function getOptimizedHistory(
 
 export function filterCandles(candles: Candle[], from: Milliseconds, to: Milliseconds) {
   return candles.filter((candle) => inRange(candle.timestamp, from, to));
+}
+
+export async function invalidateCache(instrumentId: number) {
+  await deleteFile(filePath(instrumentId));
+  return true;
 }
