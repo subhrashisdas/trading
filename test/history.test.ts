@@ -23,6 +23,12 @@ export async function getOptimizedHistoryTest() {
     new Date('2020-10-06').getTime()
   );
   ok(candlestickData.length > 0);
+  const getNewCandleData = await getOptimizedHistory(
+    instrumentId,
+    new Date('2020-10-03').getTime(),
+    new Date('2020-10-08').getTime()
+  );
+  ok(getNewCandleData.length > 0);
 }
 
 export async function filterCandlesTest() {

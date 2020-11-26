@@ -56,8 +56,8 @@ export async function getOptimizedHistory(
   const instrumentIdFilePath = filePath(instrumentId);
 
   if (await exists(instrumentIdFilePath)) {
-    const data: any = await (await readFile(instrumentIdFilePath)).toJSON;
-    const candles: Candle[] = data.candle;
+    const data: any = JSON.parse(await (await readFile(instrumentIdFilePath)).toString());
+    const candles: Candle[] = data.candles;
 
     if (from < data.from) {
       const leftCandles = await history(instrumentId, from, data.from - DayInMs);
