@@ -23,6 +23,8 @@ const folderLocation = path.join(__filename, '../../.cache/');
 
 export async function candlestick(instrumentId: number, from: Milliseconds, to: Milliseconds) {
   const credentials = await getCredentials();
+
+  // Kite 'from' timestamp is start of the day and 'to' timestamp is end of the day
   const params = querystring.stringify({
     from: format(from, 'yyyy-MM-dd'),
     to: format(to, 'yyyy-MM-dd'),
