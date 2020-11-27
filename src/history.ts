@@ -9,12 +9,14 @@ import { DayInMs, Milliseconds, shieldTimeFromFuture, WeekInMs } from '@src/date
 import { Candle, convertOhlvcCandlesToTradeJson } from '@src/candle';
 import { inRange } from 'lodash';
 
-export async function history(instrumentId: number, from: Milliseconds, to: Milliseconds) {
+export async function history(instrumentId: number, from: Milliseconds, to: Milliseconds, timePeriod = 8 * WeekInMs) {
   const candles = [];
-  for (let newFrom = from; newFrom <= to; newFrom += 8 * WeekInMs) {
-    const possibleNewTo = newFrom + 8 * WeekInMs;
+  for (let newFrom = from; newFrom <= to; newFrom += timePeriod) {
+    const possibleNewTo = newFrom + timePeriod;
     const newTo = possibleNewTo > to ? to : possibleNewTo;
-    candles.push(...(await candlestick(instrumentId, newFrom, newTo)));
+    if (newFrom !== newTo) {
+      candles.push(...(await candlestick(instrumentId, newFrom, newTo)));
+    }
   }
   return candles;
 }

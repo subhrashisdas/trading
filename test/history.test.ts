@@ -3,6 +3,7 @@ import { candlestick, history, getOptimizedHistory, filterCandles, invalidateCac
 import { ok, deepStrictEqual } from 'assert';
 import { fifteenMinuteCandles } from '@test/fixtures/candles';
 import { slice } from 'lodash';
+import { DayInMs } from '@src/date';
 
 export async function candlestickTest() {
   const candlestickData = await candlestick(263433, new Date('2020-10-05').getTime(), new Date('2020-10-06').getTime());
@@ -10,8 +11,9 @@ export async function candlestickTest() {
 }
 
 export async function normalHistoryTest() {
-  const candlestickData = await history(263433, new Date('2020-10-05').getTime(), new Date('2020-10-05').getTime());
-  ok(candlestickData.length === 375);
+  const from = new Date('2020-10-05').getTime();
+  const to = new Date('2020-10-09').getTime();
+  deepStrictEqual(await candlestick(263433, from, to), await history(263433, from, to, DayInMs));
 }
 
 export async function getOptimizedHistoryTest() {
