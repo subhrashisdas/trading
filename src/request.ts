@@ -5,8 +5,8 @@ import { URLSearchParams } from 'url';
 
 export interface jsonRequestOptions {
   url: string;
-  path: string;
   method: string;
+  path?: string;
   form?: any;
   headers?: any;
   body?: any;
@@ -27,7 +27,7 @@ export async function jsonRequest(options: jsonRequestOptions) {
 
   const fetchOptions: any = {
     method: options.method,
-    headers: {},
+    headers: options.headers || {},
   };
 
   if (options.body) {
@@ -44,8 +44,8 @@ export async function jsonRequest(options: jsonRequestOptions) {
 
   return {
     body: response.json(),
-    statusCode: response.status,
-    headers: response.headers,
+    status: response.status,
+    headers: response.headers.raw(),
   };
 }
 
