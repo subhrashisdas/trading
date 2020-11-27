@@ -14,10 +14,11 @@ export function ceilToNearestMillisecondsTest() {
 }
 
 export function shieldTimeFromFutureTest() {
-  deepStrictEqual(shieldTimeFromFuture(new Date('2050-11-10T04:00:00.000Z').getTime()), new Date().getTime());
-  deepStrictEqual(
-    shieldTimeFromFuture(new Date('2010-11-10T04:00:00.000Z').getTime()),
-    new Date('2010-11-10T04:00:00.000Z').getTime()
-  );
-  deepStrictEqual(shieldTimeFromFuture(new Date().getTime()), new Date().getTime());
+  const pastTime = new Date('2010-11-10T04:00:00.000Z').getTime();
+  const currentTime = new Date().getTime();
+  const futureTime = new Date('2050-11-10T04:00:00.000Z').getTime();
+
+  deepStrictEqual(shieldTimeFromFuture(pastTime), pastTime);
+  deepStrictEqual(shieldTimeFromFuture(currentTime), currentTime);
+  deepStrictEqual(shieldTimeFromFuture(futureTime), currentTime);
 }
