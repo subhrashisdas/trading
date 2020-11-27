@@ -6,7 +6,7 @@ import path from 'path';
 import { getCredentials } from '@src/token';
 import { format } from 'date-fns';
 import { DayInMs, Milliseconds, WeekInMs } from '@src/date';
-import { Candle, convertOhlvcCandlesToTradeJson } from '@src/candle';
+import { Candle, convertOhlvcCandlesToTradeJson, OhlvcCandle } from '@src/candle';
 import { inRange } from 'lodash';
 
 export async function history(instrumentId: number, from: Milliseconds, to: Milliseconds) {
@@ -16,7 +16,7 @@ export async function history(instrumentId: number, from: Milliseconds, to: Mill
     const newTo = possibleNewTo > to ? to : possibleNewTo;
     candles.push(...(await candlestick(instrumentId, newFrom, newTo)));
   }
-  return convertOhlvcCandlesToTradeJson(candles);
+  return candles;
 }
 
 const folderLocation = path.join(__filename, '../../.cache/');
@@ -39,7 +39,7 @@ export async function candlestick(instrumentId: number, from: Milliseconds, to: 
   });
 
   const body = await response.json();
-  return body?.data?.candles;
+  return filterCandles(convertOhlvcCandlesToTradeJson(body?.data?.candles), from, to);
 }
 
 function fileName(instrumentId: number) {

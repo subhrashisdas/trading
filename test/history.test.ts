@@ -5,8 +5,8 @@ import { fifteenMinuteCandles } from '@test/fixtures/candles';
 import { slice } from 'lodash';
 
 export async function candlestickTest() {
-  const candlestickData = await candlestick(263433, new Date('2020-10-05').getTime(), new Date('2020-10-05').getTime());
-  ok(candlestickData.length > 0);
+  const candlestickData = await candlestick(263433, new Date('2020-10-05').getTime(), new Date('2020-10-06').getTime());
+  ok(candlestickData.length === 375);
 }
 
 export async function normalHistoryTest() {
