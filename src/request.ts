@@ -1,6 +1,7 @@
 import fetch from 'node-fetch';
 import path from 'path';
 import querystring from 'querystring';
+import { URLSearchParams } from 'url';
 
 export interface jsonRequestOptions {
   url: string;
@@ -31,13 +32,12 @@ export async function jsonRequest(options: jsonRequestOptions) {
 
   if (options.body) {
     fetchOptions.body = JSON.stringify(options.body);
-    // TODO
-    fetchOptions.headers['Content-Type'] = ['application/json'];
+    fetchOptions.headers['Content-Type'] = 'application/json';
   }
 
   if (options.form) {
-    fetchOptions.body = JSON.stringify(options.body);
-    fetchOptions.headers['Content-Type'] = ['application/json'];
+    fetchOptions.body = objectToForm(options.form);
+    fetchOptions.headers['Content-Type'] = 'application/x-www-form-urlencoded';
   }
 
   const response = await fetch(completeUrl, fetchOptions);
@@ -45,7 +45,14 @@ export async function jsonRequest(options: jsonRequestOptions) {
   return {
     body: response.json(),
     statusCode: response.status,
-    // TODO
     headers: response.headers,
   };
+}
+
+export function objectToForm(params: object) {
+  const form = new URLSearchParams();
+  for (const [key, value] of Object.entries(params)) {
+    form.append(key, value);
+  }
+  return form;
 }

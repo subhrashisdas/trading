@@ -1,9 +1,8 @@
 import { writeFile, readFile } from 'fs/promises';
 import fetch from 'node-fetch';
 import path from 'path';
-import { URLSearchParams } from 'url';
-
 import envData from '../.env.json';
+import { objectToForm } from '@src/request';
 
 const folderLocation = path.join(__filename, '../../.cache/token.txt');
 
@@ -16,14 +15,6 @@ interface Config {
 interface LoginData {
   readonly kfSession: string;
   readonly requestId?: string;
-}
-
-function objectToForm(params: object) {
-  const form = new URLSearchParams();
-  for (const [key, value] of Object.entries(params)) {
-    form.append(key, value);
-  }
-  return form;
 }
 
 async function login(config: Config) {
