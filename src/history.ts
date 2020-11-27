@@ -1,5 +1,3 @@
-import fetch from 'node-fetch';
-import querystring from 'querystring';
 import { writeFile, readFile } from 'fs/promises';
 import { deleteFile, exists } from '@src/fs';
 import path from 'path';
@@ -8,6 +6,7 @@ import { format } from 'date-fns';
 import { DayInMs, Milliseconds, shieldTimeFromFuture, WeekInMs } from '@src/date';
 import { Candle, convertOhlvcCandlesToTradeJson } from '@src/candle';
 import { inRange } from 'lodash';
+import { jsonRequest } from '@src/request';
 
 export async function history(instrumentId: number, from: Milliseconds, to: Milliseconds, timePeriod = 8 * WeekInMs) {
   const candles = [];
@@ -28,20 +27,19 @@ export async function candlestick(instrumentId: number, from: Milliseconds, to: 
 
   // If 'from' and 'to' are in future both 'from' and 'to' defaults to current date
   // Kite 'from' timestamp is start of the day and 'to' timestamp is end of the day
-  const params = querystring.stringify({
-    from: format(shieldTimeFromFuture(from), 'yyyy-MM-dd'),
-    to: format(shieldTimeFromFuture(to), 'yyyy-MM-dd'),
-    oi: 0,
-  });
-
-  const response = await fetch(`https://kite.zerodha.com/oms/instruments/historical/${instrumentId}/minute?${params}`, {
+  const { body } = await jsonRequest({
     method: 'GET',
+    url: 'https://kite.zerodha.com',
+    path: `oms/instruments/historical/${instrumentId}/minute`,
     headers: {
       authorization: credentials.authorization,
     },
+    params: {
+      from: format(shieldTimeFromFuture(from), 'yyyy-MM-dd'),
+      to: format(shieldTimeFromFuture(to), 'yyyy-MM-dd'),
+      oi: 0,
+    },
   });
-
-  const body = await response.json();
   return filterCandles(convertOhlvcCandlesToTradeJson(body?.data?.candles), from, to);
 }
 

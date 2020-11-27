@@ -13,11 +13,17 @@ export interface jsonRequestOptions {
   params?: any;
 }
 
-export async function jsonRequest(options: jsonRequestOptions) {
+export interface jsonRequestReturn {
+  body: any;
+  status: any;
+  headers: any;
+}
+
+export async function jsonRequest(options: jsonRequestOptions): Promise<jsonRequestReturn> {
   let completeUrl = options.url;
 
   if (options.path) {
-    completeUrl = path.join(completeUrl, options.path);
+    completeUrl = path.join(completeUrl, options.path).replace(':/', '://');
   }
 
   if (options.params) {
@@ -43,7 +49,7 @@ export async function jsonRequest(options: jsonRequestOptions) {
   const response = await fetch(completeUrl, fetchOptions);
 
   return {
-    body: response.json(),
+    body: await response.json(),
     status: response.status,
     headers: response.headers.raw(),
   };
