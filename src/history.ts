@@ -5,8 +5,8 @@ import { deleteFile, exists } from '@src/fs';
 import path from 'path';
 import { getCredentials } from '@src/token';
 import { format } from 'date-fns';
-import { DayInMs, Milliseconds, WeekInMs } from '@src/date';
-import { Candle, convertOhlvcCandlesToTradeJson, OhlvcCandle } from '@src/candle';
+import { DayInMs, Milliseconds, shieldTimeFromFuture, WeekInMs } from '@src/date';
+import { Candle, convertOhlvcCandlesToTradeJson } from '@src/candle';
 import { inRange } from 'lodash';
 
 export async function history(instrumentId: number, from: Milliseconds, to: Milliseconds) {
@@ -24,10 +24,11 @@ const folderLocation = path.join(__filename, '../../.cache/');
 export async function candlestick(instrumentId: number, from: Milliseconds, to: Milliseconds) {
   const credentials = await getCredentials();
 
+  // If 'from' and 'to' are in future both 'from' and 'to' defaults to current date
   // Kite 'from' timestamp is start of the day and 'to' timestamp is end of the day
   const params = querystring.stringify({
-    from: format(from, 'yyyy-MM-dd'),
-    to: format(to, 'yyyy-MM-dd'),
+    from: format(shieldTimeFromFuture(from), 'yyyy-MM-dd'),
+    to: format(shieldTimeFromFuture(to), 'yyyy-MM-dd'),
     oi: 0,
   });
 

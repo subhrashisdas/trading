@@ -12,3 +12,8 @@ export function ceilToNearestMilliseconds(date: EpochTime, milliseconds: Millise
   const remainder = dateWithOffset % milliseconds;
   return dateWithOffset - remainder + milliseconds - 4 * DayInMs;
 }
+
+export function shieldTimeFromFuture(dateTime: Milliseconds) {
+  const currentTime = new Date().getTime();
+  return dateTime > currentTime ? currentTime : dateTime;
+}
