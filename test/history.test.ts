@@ -17,20 +17,15 @@ export async function normalHistoryTest() {
 }
 
 export async function getOptimizedHistoryTest() {
-  const instrumentId = 263433;
-  await invalidateCache(instrumentId);
-  const candlestickData = await getOptimizedHistory(
-    instrumentId,
-    new Date('2020-10-05').getTime(),
-    new Date('2020-10-06').getTime()
-  );
-  ok(candlestickData.length > 0);
-  const getNewCandleData = await getOptimizedHistory(
-    instrumentId,
-    new Date('2020-10-03').getTime(),
-    new Date('2020-10-08').getTime()
-  );
-  ok(getNewCandleData.length > 0);
+  const id = 263433;
+  const time1 = new Date('2020-06-18').getTime(); // Sat, Sun in between
+  const time2 = new Date('2020-06-22').getTime();
+  const time3 = new Date('2020-06-24').getTime();
+  const time4 = new Date('2020-06-26').getTime(); // No included this data
+
+  await invalidateCache(id);
+  deepStrictEqual(await getOptimizedHistory(id, time2, time3), await history(id, time2, time3, DayInMs));
+  deepStrictEqual(await getOptimizedHistory(id, time1, time4), await history(id, time1, time4, DayInMs));
 }
 
 export async function filterCandlesTest() {
