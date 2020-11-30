@@ -32,6 +32,7 @@
   "dependencies": {
     "@types/lodash": "^4.14.165",
     "@types/node-fetch": "^2.5.7",
+    "commander": "^6.2.0",
     "date-fns": "^2.16.1",
     "got": "^11.8.0",
     "lodash": "^4.17.20",
