@@ -36,6 +36,8 @@ export async function jsonRequest(options: jsonRequestOptions): Promise<jsonRequ
     headers: options.headers || {},
   };
 
+  fetchOptions.headers['User-Agent'] = 'Web/2.0';
+
   if (options.body) {
     fetchOptions.body = JSON.stringify(options.body);
     fetchOptions.headers['Content-Type'] = 'application/json';
