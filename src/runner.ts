@@ -1,7 +1,7 @@
 import { ceilToNearestMilliseconds, DayInMs, Milliseconds } from '@src/date';
 import { filteredInstruments } from '@src/instrument';
 import { getOptimizedHistory } from '@src/history';
-import { Candle } from './candle';
+import { Candle } from '@src/candle';
 
 export async function runAlgo(from: Milliseconds, to: Milliseconds, algoName: string) {
   const instruments = await filteredInstruments(['2']);
