@@ -1,5 +1,6 @@
 import { getCredentials } from '@src/token';
 import { jsonRequest } from '@src/request';
+import { Instrument } from './instrument';
 
 export interface Order {
   placed_by: string;
@@ -89,4 +90,15 @@ export async function placeOrder(options: PlaceOrderOptions) {
       user_id: credentials.userId,
     },
   });
+}
+
+export function createPlaceOrderOption(instrument: Instrument, price: number, quantity: number): PlaceOrderOptions {
+  return {
+    exchange: instrument.segment,
+    tradingSymbol: instrument.tradingsymbol,
+    transactionType: price > 0 ? TransactionType.buy : TransactionType.sell,
+    quantity,
+    price,
+    triggerPrice: 0,
+  };
 }
