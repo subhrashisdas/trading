@@ -5,10 +5,10 @@ export const candlesLimit = WeekInMs;
 export const timeInterval = 5 * MinuteInMs;
 export const name = 'uni';
 
-export function trade(candles: Candle[]) {
-  return 'buy';
+export function trade(candles: Candle[]): number {
+  return -0;
 }
 
-export function squareoff(candles: Candle[]) {
-  return 'sell';
+export function squareoff(candles: Candle[]): number {
+  return +0;
 }

@@ -17,7 +17,7 @@ export interface Order {
   tradingsymbol: string;
   instrument_token: number;
   order_type: string;
-  transaction_type: string;
+  transaction_type: TransactionType;
   validity: string;
   product: string;
   quantity: number;
@@ -49,13 +49,18 @@ export async function getOrders(): Promise<Order[]> {
   return body?.data as Order[];
 }
 
+export enum TransactionType {
+  buy = 'buy',
+  sell = 'sell',
+}
+
 export interface PlaceOrderOptions {
   exchange: string;
   tradingSymbol: string;
-  transactionType: string;
-  quantity: string;
-  price: string;
-  triggerPrice: string;
+  transactionType: TransactionType;
+  quantity: number;
+  price: number;
+  triggerPrice: number;
 }
 
 export async function placeOrder(options: PlaceOrderOptions) {
