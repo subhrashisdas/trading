@@ -1,5 +1,5 @@
+import { HourInMs, WeekInMs, ceilToNearestMilliseconds, shieldTimeFromFuture } from '@src/date';
 import { deepStrictEqual } from 'assert';
-import { ceilToNearestMilliseconds, HourInMs, shieldTimeFromFuture, WeekInMs } from '@src/date';
 
 export function ceilToNearestMillisecondsTest() {
   deepStrictEqual(

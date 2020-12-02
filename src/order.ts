@@ -1,6 +1,6 @@
+import { Instrument } from './instrument';
 import { getCredentials } from '@src/token';
 import { jsonRequest } from '@src/request';
-import { Instrument } from './instrument';
 
 export interface Order {
   placed_by: string;

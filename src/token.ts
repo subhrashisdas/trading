@@ -1,8 +1,8 @@
-import { writeFile, readFile } from 'fs/promises';
+import { objectToForm } from '@src/request';
+import { readFile, writeFile } from 'fs/promises';
+import envData from '../.env.json';
 import fetch from 'node-fetch';
 import path from 'path';
-import envData from '../.env.json';
-import { objectToForm } from '@src/request';
 
 const folderLocation = path.join(__filename, '../../.cache/token.txt');
 

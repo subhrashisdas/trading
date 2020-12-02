@@ -1,7 +1,7 @@
+import { URLSearchParams } from 'url';
 import fetch from 'node-fetch';
 import path from 'path';
 import querystring from 'querystring';
-import { URLSearchParams } from 'url';
 
 export interface jsonRequestOptions {
   url: string;

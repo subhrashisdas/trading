@@ -1,5 +1,5 @@
-import { convertInterval, convertOhlvcCandlesToTradeJson } from '@src/candle';
 import { DayInMs, MinuteInMs } from '@src/date';
+import { convertInterval, convertOhlvcCandlesToTradeJson } from '@src/candle';
 import { deepStrictEqual } from 'assert';
 
 import { dailyCandles, fifteenMinuteCandles, thirtyMinuteCandles } from '@test/fixtures/candles';

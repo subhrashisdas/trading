@@ -1,9 +1,9 @@
-import { ceilToNearestMilliseconds, DayInMs, Milliseconds, MinuteInMs } from '@src/date';
-import { filteredInstruments, Instrument } from '@src/instrument';
-import { getOptimizedHistory } from '@src/history';
+import { Candle } from '@src/candle';
+import { DayInMs, Milliseconds, MinuteInMs, ceilToNearestMilliseconds } from '@src/date';
+import { Instrument, filteredInstruments } from '@src/instrument';
+import { PlaceOrderOptions, createPlaceOrderOption } from '@src/order';
 import { getAlgo } from '@src/algo';
-import { createPlaceOrderOption, PlaceOrderOptions } from './order';
-import { Candle } from './candle';
+import { getOptimizedHistory } from '@src/history';
 
 export async function runAlgo(from: Milliseconds, to: Milliseconds, algoName: string, quantity: number) {
   const instruments = await filteredInstruments(['2']);

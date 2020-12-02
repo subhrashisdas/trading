@@ -6,6 +6,30 @@
     "test": "jest",
     "lint": "tsdx lint src test --fix"
   },
+  "eslintConfig": {
+    "plugins": [
+      "sort-imports-es6-autofix"
+    ],
+    "extends": [
+      "prettier/@typescript-eslint",
+      "plugin:prettier/recommended"
+    ],
+    "rules": {
+      "sort-imports-es6-autofix/sort-imports-es6": [
+        2,
+        {
+          "ignoreCase": false,
+          "ignoreMemberSort": false,
+          "memberSyntaxSortOrder": [
+            "none",
+            "all",
+            "multiple",
+            "single"
+          ]
+        }
+      ]
+    }
+  },
   "prettier": {
     "printWidth": 120,
     "semi": true,
@@ -23,6 +47,8 @@
     ]
   },
   "devDependencies": {
+    "eslint-config-prettier": "^6.15.0",
+    "eslint-plugin-sort-imports-es6-autofix": "^0.5.0",
     "jest": "^26.6.3",
     "ts-jest": "^26.4.4",
     "tsdx": "^0.14.1",

@@ -1,9 +1,9 @@
+import { DayInMs } from '@src/date';
+import { candlestick, filterCandles, getOptimizedHistory, history, invalidateCache } from '@src/history';
 import { convertOhlvcCandlesToTradeJson } from '@src/candle';
-import { candlestick, history, getOptimizedHistory, filterCandles, invalidateCache } from '@src/history';
-import { ok, deepStrictEqual } from 'assert';
+import { deepStrictEqual, ok } from 'assert';
 import { fifteenMinuteCandles } from '@test/fixtures/candles';
 import { slice } from 'lodash';
-import { DayInMs } from '@src/date';
 
 export async function candlestickTest() {
   const candlestickData = await candlestick(263433, new Date('2020-10-05').getTime(), new Date('2020-10-06').getTime());

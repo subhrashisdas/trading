@@ -1,5 +1,5 @@
-import { readdirSync, statSync } from 'fs';
 import { join } from 'path';
+import { readdirSync, statSync } from 'fs';
 
 let files: string[] = [];
 

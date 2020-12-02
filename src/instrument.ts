@@ -1,5 +1,5 @@
-import fetch from 'node-fetch';
 import { getCredentials } from '@src/token';
+import fetch from 'node-fetch';
 
 export interface MarketWatches {
   id: number;
