@@ -1,5 +1,5 @@
-import fetch from 'node-fetch';
 import { getCredentials } from '@src/token';
+import { jsonRequest } from '@src/request';
 
 export interface Order {
   placed_by: string;
@@ -37,12 +37,51 @@ export interface Order {
 export async function getOrders(): Promise<Order[]> {
   const credentials = await getCredentials();
 
-  const response = await fetch('https://kite.zerodha.com/oms/orders', {
+  const { body } = await jsonRequest({
+    url: 'https://kite.zerodha.com',
+    path: '/oms/orders',
+    method: 'GET',
     headers: {
       authorization: credentials.authorization,
     },
   });
 
-  const body = await response.json();
   return body?.data as Order[];
+}
+
+export interface PlaceOrderOptions {
+  exchange: string;
+  tradingSymbol: string;
+  transactionType: string;
+  quantity: string;
+  price: string;
+  triggerPrice: string;
+}
+
+export async function placeOrder(options: PlaceOrderOptions) {
+  const credentials = await getCredentials();
+  const variety = 'co';
+
+  await jsonRequest({
+    url: 'https://kite.zerodha.com',
+    path: `/oms/orders/${variety}`,
+    method: 'POST',
+    form: {
+      variety: variety,
+      exchange: options.exchange,
+      tradingsymbol: options.tradingSymbol,
+      transaction_type: options.transactionType,
+      order_type: 'LIMIT',
+      quantity: options.quantity,
+      price: options.price,
+      product: 'MIS',
+      validity: 'DAY',
+      disclosed_quantity: 0,
+      trigger_price: options.triggerPrice,
+      squareoff: 0,
+      stoploss: 0,
+      trailing_stoploss: 0,
+      user_id: credentials.userId,
+    },
+  });
 }
