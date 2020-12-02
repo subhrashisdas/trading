@@ -1,4 +1,4 @@
-import { Instrument } from './instrument';
+import { Instrument } from '@src/instrument';
 import { getCredentials } from '@src/token';
 import { jsonRequest } from '@src/request';
 
