@@ -3,7 +3,6 @@ import { convertInterval, convertOhlvcCandlesToTradeJson, groupByCandles } from 
 import { deepStrictEqual } from 'assert';
 
 import {
-  dailyCandles,
   fifteenMinuteCandles,
   multipleDaysCandles,
   multipleDaysCandlesGrouped,
@@ -14,11 +13,6 @@ export function convertIntervalTest() {
   deepStrictEqual(
     convertInterval(convertOhlvcCandlesToTradeJson(fifteenMinuteCandles), 30 * MinuteInMs),
     convertOhlvcCandlesToTradeJson(thirtyMinuteCandles)
-  );
-
-  deepStrictEqual(
-    convertInterval(convertOhlvcCandlesToTradeJson(fifteenMinuteCandles), DayInMs),
-    convertOhlvcCandlesToTradeJson(dailyCandles)
   );
 }
 
