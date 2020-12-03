@@ -75,11 +75,12 @@ export function trendCandle(dominatingCandle: Candle, currentCandle: Candle) {
 
 export function groupByCandles(candles: Candle[], roundingNumber: Milliseconds): Candle[][] {
   const groupedCandles: Candle[][] = [];
-  for (const candle of candles) {
-    if (
-      candle.timestamp >= ceilToNearestMilliseconds(candle.timestamp, roundingNumber) ||
-      groupedCandles.length === 0
-    ) {
+  for (let index = 0; index < candles.length; index++) {
+    const candle = candles[index];
+    const previousCandle = candles[index - 1];
+    if (!previousCandle) {
+      groupedCandles.push([candle]);
+    } else if (candle.timestamp > ceilToNearestMilliseconds(previousCandle.timestamp, roundingNumber)) {
       groupedCandles.push([candle]);
     } else {
       groupedCandles[groupedCandles.length - 1].push(candle);
