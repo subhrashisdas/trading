@@ -11,7 +11,7 @@ export async function runAlgo(from: Milliseconds, to: Milliseconds, algoName: st
     const history = await getOptimizedHistory(from, to, instrument.id);
     const groupedCandles = groupByCandles(history, DayInMs);
     for (const candles of groupedCandles) {
-      runCandlesInAGroup({ candles, algoName, instrument, quantity });
+      await runCandlesInAGroup({ candles, algoName, instrument, quantity });
     }
   }
 }
