@@ -92,13 +92,19 @@ export async function placeOrder(options: PlaceOrderOptions) {
   });
 }
 
-export function createPlaceOrderOption(instrument: Instrument, price: number, quantity: number): PlaceOrderOptions {
+export interface createPlaceOrderOption {
+  instrument: Instrument;
+  price: number;
+  quantity: number;
+}
+
+export function createPlaceOrderOption(options: createPlaceOrderOption): PlaceOrderOptions {
   return {
-    exchange: instrument.segment,
-    tradingSymbol: instrument.tradingsymbol,
-    transactionType: price > 0 ? TransactionType.buy : TransactionType.sell,
-    quantity,
-    price,
+    exchange: options.instrument.segment,
+    tradingSymbol: options.instrument.tradingsymbol,
+    transactionType: options.price > 0 ? TransactionType.buy : TransactionType.sell,
+    quantity: options.quantity,
+    price: options.price,
     triggerPrice: 0,
   };
 }

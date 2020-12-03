@@ -39,28 +39,23 @@ interface runCandlesInAGroupOptions {
 }
 
 export async function runCandlesInAGroup(options: runCandlesInAGroupOptions) {
-  let ordersToBePlaced: PlaceOrderOptions | undefined;
-
+  const ordersToBePlaced: PlaceOrderOptions[] = [];
   for (const candle of options.candles) {
-    if (!ordersToBePlaced) {
-      const priceToTrade = await runAlgoEachCandle({
-        candle,
-        algoName: options.algoName,
-        type: 'trade',
-        instrument: options.instrument,
-      });
-      if (priceToTrade) {
-        ordersToBePlaced = createPlaceOrderOption(options.instrument, priceToTrade, options.quantity);
-      }
-    }
-
-    if (ordersToBePlaced) {
-      await runAlgoEachCandle({
-        candle,
-        algoName: options.algoName,
-        type: 'squareoff',
-        instrument: options.instrument,
-      });
+    const priceToTrade = await runAlgoEachCandle({
+      candle,
+      algoName: options.algoName,
+      type: ordersToBePlaced ? 'squareoff' : 'trade',
+      instrument: options.instrument,
+    });
+    if (priceToTrade) {
+      ordersToBePlaced.push(
+        createPlaceOrderOption({
+          instrument: options.instrument,
+          price: priceToTrade,
+          quantity: options.quantity,
+        })
+      );
     }
   }
+  return ordersToBePlaced;
 }
