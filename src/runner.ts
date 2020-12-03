@@ -1,5 +1,5 @@
-import { Candle } from '@src/candle';
-import { DayInMs, Milliseconds, MinuteInMs, ceilToNearestMilliseconds } from '@src/date';
+import { Candle, groupByCandles } from '@src/candle';
+import { DayInMs, Milliseconds, MinuteInMs } from '@src/date';
 import { Instrument, filteredInstruments } from '@src/instrument';
 import { PlaceOrderOptions, createPlaceOrderOption } from '@src/order';
 import { getAlgo } from '@src/algo';
@@ -8,23 +8,10 @@ import { getOptimizedHistory } from '@src/history';
 export async function runAlgo(from: Milliseconds, to: Milliseconds, algoName: string, quantity: number) {
   const instruments = await filteredInstruments(['2']);
   for (const instrument of instruments) {
-    const candles = await getOptimizedHistory(from, to, instrument.id);
-    let ordersToBePlaced: PlaceOrderOptions | undefined;
-    for (const candle of candles) {
-      if (!ordersToBePlaced) {
-        const priceToTrade = await runAlgoEachCandle({ candle, algoName, type: 'trade', instrument });
-        if (priceToTrade) {
-          ordersToBePlaced = createPlaceOrderOption(instrument, priceToTrade, quantity);
-        }
-      }
-
-      if (ordersToBePlaced) {
-        await runAlgoEachCandle({ candle, algoName, type: 'squareoff', instrument: instrument });
-      }
-
-      if (candle.timestamp < ceilToNearestMilliseconds(candle.timestamp, DayInMs)) {
-        ordersToBePlaced = undefined;
-      }
+    const history = await getOptimizedHistory(from, to, instrument.id);
+    const groupedCandles = groupByCandles(history, DayInMs);
+    for (const candles of groupedCandles) {
+      runCandlesInAGroup({ candles, algoName, instrument, quantity });
     }
   }
 }
@@ -42,4 +29,38 @@ export async function runAlgoEachCandle(options: RunAlgoEachCandleOptions) {
   const algoTo = options.candle.timestamp + MinuteInMs;
   const algoCandles = await getOptimizedHistory(algoFrom, algoTo, options.instrument.id);
   return options.type === 'trade' ? algo.trade(algoCandles) : algo.squareoff(algoCandles);
+}
+
+interface runCandlesInAGroupOptions {
+  candles: Candle[];
+  algoName: string;
+  instrument: Instrument;
+  quantity: number;
+}
+
+export async function runCandlesInAGroup(options: runCandlesInAGroupOptions) {
+  let ordersToBePlaced: PlaceOrderOptions | undefined;
+
+  for (const candle of options.candles) {
+    if (!ordersToBePlaced) {
+      const priceToTrade = await runAlgoEachCandle({
+        candle,
+        algoName: options.algoName,
+        type: 'trade',
+        instrument: options.instrument,
+      });
+      if (priceToTrade) {
+        ordersToBePlaced = createPlaceOrderOption(options.instrument, priceToTrade, options.quantity);
+      }
+    }
+
+    if (ordersToBePlaced) {
+      await runAlgoEachCandle({
+        candle,
+        algoName: options.algoName,
+        type: 'squareoff',
+        instrument: options.instrument,
+      });
+    }
+  }
 }
