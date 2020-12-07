@@ -1,4 +1,5 @@
 import { Instrument } from '@src/instrument';
+import { Milliseconds } from './date';
 import { getCredentials } from '@src/token';
 import { jsonRequest } from '@src/request';
 
@@ -92,13 +93,14 @@ export async function placeOrder(options: PlaceOrderOptions) {
   });
 }
 
-export interface createPlaceOrderOption {
+export interface createPlaceOrderOptionOption {
   instrument: Instrument;
   price: number;
   quantity: number;
+  timestamp: Milliseconds;
 }
 
-export function createPlaceOrderOption(options: createPlaceOrderOption): PlaceOrderOptions {
+export function createPlaceOrderOption(options: createPlaceOrderOptionOption): PlaceOrderOptions {
   return {
     exchange: options.instrument.segment,
     tradingSymbol: options.instrument.tradingsymbol,
