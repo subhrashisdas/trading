@@ -15,7 +15,7 @@ export async function runAlgo(
   for (const instrument of instruments) {
     const history = await getOptimizedHistory(from, to, instrument.id);
     for (const candle of history) {
-      runAlgoEachCandle({
+      await runAlgoEachCandle({
         candle,
         algoName,
         instrument,
