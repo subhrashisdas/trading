@@ -1,5 +1,5 @@
 import { deepStrictEqual } from 'assert';
-import { deleteJson, getJson, setJson } from '@src/fs';
+import { deleteJson, functionCache, getJson, setJson } from '@src/fs';
 
 export async function setAndGetJsonTest() {
   const now = Date.now();
@@ -17,4 +17,16 @@ export async function setAndGetJsonTest() {
 
   await setJson(key, data);
   deepStrictEqual(await getJson(key), data);
+}
+
+async function addTimeToNow(ms: number) {
+  return Date.now() + ms;
+}
+
+export async function functionCacheTest() {
+  const now = Date.now();
+  deepStrictEqual(
+    await functionCache(addTimeToNow, [1000], now + 1000),
+    await functionCache(addTimeToNow, [1000], now + 1000)
+  );
 }
