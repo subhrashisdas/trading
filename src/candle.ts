@@ -88,3 +88,13 @@ export function groupByCandles(candles: Candle[], roundingNumber: Milliseconds):
   }
   return groupedCandles;
 }
+
+export function keepOneCandleInRange(candles: Candle[]) {
+  const ret: Candle[] = [];
+  for (const index in candles) {
+    const previousCandle: Candle = candles[index];
+    const currentCandle: Candle | undefined = candles[0];
+    ret.push(currentCandle);
+  }
+  return ret;
+}
