@@ -23,3 +23,9 @@ export async function getPositions(): Promise<Position[]> {
 
   return body?.data?.day as Position[];
 }
+
+export async function getQuantityByInstrumentId(instrumentId: number): Promise<number> {
+  const positions = await getPositions();
+  const position = positions.find((position) => position.instrument_token === instrumentId);
+  return position ? position.quantity : 0;
+}
