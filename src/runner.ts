@@ -3,6 +3,7 @@ import { Instrument, filteredInstruments } from '@src/instrument';
 import { Milliseconds, MinuteInMs } from '@src/date';
 import { getAlgo } from '@src/algo';
 import { getOptimizedHistory } from '@src/history';
+import { getQuantityByInstrumentId } from '@src/position';
 
 export async function runAlgo(
   from: Milliseconds,
@@ -31,10 +32,10 @@ interface RunAlgoEachCandleOptions {
 }
 
 export async function runAlgoEachCandle(options: RunAlgoEachCandleOptions) {
-  const type = 'trade';
+  const quantity = await getQuantityByInstrumentId(options.instrument.instrument_token);
   const algo = getAlgo(options.algoName);
   const algoFrom = options.candle.timestamp - algo.timeInterval;
   const algoTo = options.candle.timestamp + MinuteInMs;
   const algoCandles = await getOptimizedHistory(algoFrom, algoTo, options.instrument.id);
-  return type === 'trade' ? algo.trade(algoCandles) : algo.squareoff(algoCandles);
+  return quantity === 0 ? algo.trade(algoCandles) : algo.squareoff(algoCandles);
 }
