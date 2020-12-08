@@ -89,12 +89,18 @@ export function groupByCandles(candles: Candle[], roundingNumber: Milliseconds):
   return groupedCandles;
 }
 
-export function keepOneCandleInRange(candles: Candle[]) {
+export function keepOneCandleInRange(candles: Candle[], gap: Milliseconds) {
   const ret: Candle[] = [];
-  for (const index in candles) {
-    const previousCandle: Candle = candles[index];
-    const currentCandle: Candle | undefined = candles[0];
-    ret.push(currentCandle);
+  for (const currentCandle of candles) {
+    const previousPushedCandle = ret[ret.length - 1];
+    if (!previousPushedCandle) {
+      ret.push(currentCandle);
+    } else if (
+      ceilToNearestMilliseconds(previousPushedCandle.timestamp, gap) <
+      ceilToNearestMilliseconds(currentCandle.timestamp, gap)
+    ) {
+      ret.push(currentCandle);
+    }
   }
   return ret;
 }
