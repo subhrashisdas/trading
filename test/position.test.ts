@@ -1,4 +1,3 @@
-import { getOrders } from '@src/order';
 import { getPositions } from '@src/position';
 import { ok } from 'assert';
 
