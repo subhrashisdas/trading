@@ -26,7 +26,7 @@ export function filePath(key: string) {
   return path.join(folderLocation, key);
 }
 
-export async function setJson(key: string, value: object, cache: Milliseconds) {
+export async function setJson(key: string, value: object, cache?: Milliseconds) {
   try {
     const fileData = { value, cache };
     await writeFile(filePath(key), JSON.stringify(fileData));
