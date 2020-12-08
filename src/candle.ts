@@ -1,4 +1,4 @@
-import { Milliseconds, ceilToNearestMilliseconds } from '@src/date';
+import { Milliseconds } from '@src/date';
 import { inRange } from 'lodash';
 
 export interface Candle {
@@ -71,36 +71,4 @@ export function trendCandle(dominatingCandle: Candle, currentCandle: Candle) {
     inRange(currentCandle.close, dominatingCandle.close, currentCandle.open)
     ? dominatingCandle
     : currentCandle;
-}
-
-export function groupByCandles(candles: Candle[], roundingNumber: Milliseconds): Candle[][] {
-  const groupedCandles: Candle[][] = [];
-  for (let index = 0; index < candles.length; index++) {
-    const candle = candles[index];
-    const previousCandle = candles[index - 1];
-    if (!previousCandle) {
-      groupedCandles.push([candle]);
-    } else if (candle.timestamp > ceilToNearestMilliseconds(previousCandle.timestamp, roundingNumber)) {
-      groupedCandles.push([candle]);
-    } else {
-      groupedCandles[groupedCandles.length - 1].push(candle);
-    }
-  }
-  return groupedCandles;
-}
-
-export function keepOneCandleInRange(candles: Candle[], gap: Milliseconds) {
-  const ret: Candle[] = [];
-  for (const currentCandle of candles) {
-    const previousPushedCandle = ret[ret.length - 1];
-    if (!previousPushedCandle) {
-      ret.push(currentCandle);
-    } else if (
-      ceilToNearestMilliseconds(previousPushedCandle.timestamp, gap) <
-      ceilToNearestMilliseconds(currentCandle.timestamp, gap)
-    ) {
-      ret.push(currentCandle);
-    }
-  }
-  return ret;
 }
