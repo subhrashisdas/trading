@@ -1,5 +1,6 @@
 import { Milliseconds } from '@src/date';
 import { access, readFile, unlink, writeFile } from 'fs/promises';
+import { deepStrictEqual } from 'assert';
 import path from 'path';
 
 export async function exists(filePath: string): Promise<Boolean> {
@@ -26,9 +27,9 @@ export function filePath(key: string) {
   return path.join(folderLocation, key);
 }
 
-export async function setJson(key: string, value: object, cache?: Milliseconds) {
+export async function setJson(key: string, value: object, cacheTill?: Milliseconds) {
   try {
-    const fileData = { value, cache };
+    const fileData = { value, cacheTill };
     await writeFile(filePath(key), JSON.stringify(fileData));
     return value;
   } catch (_) {
@@ -38,8 +39,8 @@ export async function setJson(key: string, value: object, cache?: Milliseconds) 
 
 export async function getJson(key: string) {
   try {
-    const { value, cache } = JSON.parse((await readFile(filePath(key))).toString());
-    return cache && cache < Date.now() ? undefined : value;
+    const { value, cacheTill } = JSON.parse((await readFile(filePath(key))).toString());
+    return cacheTill && cacheTill < Date.now() ? undefined : value;
   } catch (_) {
     return;
   }
@@ -51,5 +52,17 @@ export async function deleteJson(key: string) {
     return;
   } catch (_) {
     return;
+  }
+}
+
+export async function functionCache(func: Function, variablesData: any[] = [], cacheTill: Milliseconds) {
+  try {
+    const { variables, results } = await getJson(func.name);
+    deepStrictEqual(variablesData, variables);
+    return results;
+  } catch (_) {
+    const results = await func(...variablesData);
+    await setJson(func.name, { results, variables: variablesData }, cacheTill);
+    return results;
   }
 }
