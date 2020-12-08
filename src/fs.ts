@@ -1,3 +1,4 @@
+import { Milliseconds } from '@src/date';
 import { access, readFile, unlink, writeFile } from 'fs/promises';
 import path from 'path';
 
@@ -25,9 +26,10 @@ export function filePath(key: string) {
   return path.join(folderLocation, key);
 }
 
-export async function setJson(key: string, value: object) {
+export async function setJson(key: string, value: object, cache: Milliseconds) {
   try {
-    await writeFile(filePath(key), JSON.stringify(value));
+    const fileData = { value, cache };
+    await writeFile(filePath(key), JSON.stringify(fileData));
     return value;
   } catch (_) {
     return;
@@ -36,7 +38,8 @@ export async function setJson(key: string, value: object) {
 
 export async function getJson(key: string) {
   try {
-    return JSON.parse((await readFile(filePath(key))).toString());
+    const { value, cache } = JSON.parse((await readFile(filePath(key))).toString());
+    return cache && cache < Date.now() ? undefined : value;
   } catch (_) {
     return;
   }
