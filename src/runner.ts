@@ -47,6 +47,7 @@ interface RunAlgoEachCandleOptions {
 }
 
 export async function runAlgoEachCandle(options: RunAlgoEachCandleOptions) {
+  // time based square off
   const algo = getAlgo(options.algoName);
   const algoFrom = options.candle.timestamp - algo.timeInterval;
   const algoTo = options.candle.timestamp + MinuteInMs;
