@@ -1,4 +1,4 @@
-import { Candle } from '@src/candle';
+import { Candle, convertInterval } from '@src/candle';
 import { Instrument, filteredInstruments } from '@src/instrument';
 import { Milliseconds, MinuteInMs, ceilToNearestMilliseconds } from '@src/date';
 import { getAlgo } from '@src/algo';
@@ -19,18 +19,14 @@ export async function runAlgo(options: RunAlgoOptions) {
   const instruments = await filteredInstruments(options.instrumentNames);
   for (const instrument of instruments) {
     const history = await getOptimizedHistory(options.from, options.to, instrument.id);
-    for (const candle of history) {
-      // Not correct logic, need refinement
-      let alreadyExecuted = false;
-      if (candle.timestamp < ceilToNearestMilliseconds(candle.timestamp, options.recurring) && !alreadyExecuted) {
-        alreadyExecuted = true;
-        await runAlgoEachCandle({
-          candle,
-          algoName: options.algoName,
-          instrument,
-          cacheTill: ceilToNearestMilliseconds(candle.timestamp, options.recurring),
-        });
-      }
+    const changedInterval = convertInterval(history, options.recurring);
+    for (const candle of changedInterval) {
+      await runAlgoEachCandle({
+        candle,
+        algoName: options.algoName,
+        instrument,
+        cacheTill: ceilToNearestMilliseconds(candle.timestamp, options.recurring),
+      });
     }
   }
 }
