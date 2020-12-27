@@ -1,4 +1,4 @@
-import { HourInMs, WeekInMs, ceilToNearestMilliseconds, shieldTimeFromFuture } from '@src/date';
+import { HourInMs, WeekInMs, ceilToNearestMilliseconds, inDayRange, shieldTimeFromFuture } from '@src/date';
 import { deepStrictEqual } from 'assert';
 
 export function ceilToNearestMillisecondsTest() {
@@ -21,4 +21,17 @@ export function shieldTimeFromFutureTest() {
   deepStrictEqual(shieldTimeFromFuture(pastTime), pastTime);
   deepStrictEqual(shieldTimeFromFuture(currentTime), currentTime);
   deepStrictEqual(shieldTimeFromFuture(futureTime), currentTime);
+}
+
+export function inDayRangeTest() {
+  const from = new Date(4 * HourInMs).getTime();
+  const to = new Date(10 * HourInMs).getTime();
+
+  const previous = new Date('2020-11-10T08:59:00+0530').getTime();
+  const present = new Date('2020-11-10T09:31:00+0530').getTime();
+  const future = new Date('2020-11-10T03:31:00+0530').getTime();
+
+  deepStrictEqual(inDayRange(from, to, previous), false);
+  deepStrictEqual(inDayRange(from, to, present), true);
+  deepStrictEqual(inDayRange(from, to, future), false);
 }

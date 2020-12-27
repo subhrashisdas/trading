@@ -17,3 +17,8 @@ export function shieldTimeFromFuture(dateTime: Milliseconds) {
   const currentTime = new Date().getTime();
   return dateTime > currentTime ? currentTime : dateTime;
 }
+
+export function inDayRange(fromRemainder: Milliseconds, toRemainder: Milliseconds, currentTime: Milliseconds) {
+  const remainder = currentTime % DayInMs;
+  return fromRemainder <= remainder && remainder < toRemainder;
+}
