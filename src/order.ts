@@ -1,6 +1,7 @@
 import { Instrument } from '@src/instrument';
-import { Milliseconds } from './date';
+import { Milliseconds } from '@src/date';
 import { getCredentials } from '@src/token';
+import { getJson, setJson } from '@src/fs';
 import { jsonRequest } from '@src/request';
 
 export interface Order {
@@ -109,4 +110,20 @@ export function createPlaceOrderOption(options: createPlaceOrderOptionOption): P
     price: options.price,
     triggerPrice: 0,
   };
+}
+
+export async function getOrder(): Promise<Order[]> {
+  return getJson('order');
+}
+
+export async function pushOrder(order: Order) {
+  const oldOrders = (await getJson('order')) || [];
+  oldOrders.push(order);
+  setJson('order', oldOrders);
+}
+
+export interface PriceToPlaceOrderOptions {}
+
+export function priceToPlaceOrder(priceToPlaceOrderOptions: PriceToPlaceOrderOptions): Order {
+  return {} as Order;
 }
