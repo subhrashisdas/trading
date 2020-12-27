@@ -1,6 +1,6 @@
 import { Candle, convertInterval } from '@src/candle';
+import { HourInMs, Milliseconds, MinuteInMs, inDayRange } from '@src/date';
 import { Instrument, filteredInstruments } from '@src/instrument';
-import { Milliseconds, MinuteInMs } from '@src/date';
 import { Order, priceToPlaceOrder, pushOrder } from '@src/order';
 import { Position, getPositions, getQuantityByInstrumentId } from '@src/position';
 import { getAlgo } from '@src/algo';
@@ -47,10 +47,13 @@ interface RunAlgoEachCandleOptions {
 }
 
 export async function runAlgoEachCandle(options: RunAlgoEachCandleOptions) {
-  // time based square off
   const algo = getAlgo(options.algoName);
   const algoFrom = options.candle.timestamp - algo.timeInterval;
   const algoTo = options.candle.timestamp + MinuteInMs;
   const algoCandles = await getOptimizedHistory(algoFrom, algoTo, options.instrument.id);
-  return options.quantity === 0 ? algo.trade(algoCandles) : algo.squareoff(algoCandles);
+  return inDayRange(algo.startAt, algo.endAt, options.candle.timestamp)
+    ? options.quantity === 0
+      ? algo.trade(algoCandles)
+      : algo.squareoff(algoCandles)
+    : algo.squareoff(algoCandles);
 }
