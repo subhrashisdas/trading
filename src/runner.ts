@@ -51,9 +51,11 @@ export async function runAlgoEachCandle(options: RunAlgoEachCandleOptions) {
   const algoFrom = options.candle.timestamp - algo.timeInterval;
   const algoTo = options.candle.timestamp + MinuteInMs;
   const algoCandles = await getOptimizedHistory(algoFrom, algoTo, options.instrument.id);
-  return options.quantity === 0
-    ? inDayRange(algo.startAt, algo.endAt, options.candle.timestamp)
+  return inDayRange(algo.startAt, algo.endAt, options.candle.timestamp)
+    ? options.quantity === 0
       ? algo.trade(algoCandles)
-      : 0
-    : algo.squareoff(algoCandles);
+      : algo.squareoff(algoCandles)
+    : options.quantity === 0
+    ? 0
+    : -options.quantity;
 }
