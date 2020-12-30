@@ -55,7 +55,5 @@ export async function runAlgoEachCandle(options: RunAlgoEachCandleOptions) {
     ? options.quantity === 0
       ? algo.trade(algoCandles)
       : algo.squareoff(algoCandles)
-    : options.quantity === 0
-    ? 0
     : -options.quantity;
 }
