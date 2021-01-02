@@ -13,7 +13,7 @@ export interface Instrument {
   tradingsymbol: string;
   instrument_token: number;
   last_price: number;
-  segment: Segment;
+  segment: string | Segment;
   expiry: string;
   strike: number;
   lot_size: number;

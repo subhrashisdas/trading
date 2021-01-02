@@ -1,3 +1,4 @@
+import { Instrument } from '@src/instrument';
 import { OhlvcCandle } from '@src/candle';
 
 export const fifteenMinuteCandles: OhlvcCandle[] = [

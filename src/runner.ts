@@ -28,7 +28,7 @@ export async function runAlgo(options: RunAlgoOptions) {
         candle,
         algoName: options.algoName,
         instrument,
-        quantity: await getQuantityByInstrumentId(currentPositions, instrument.id),
+        price: await getQuantityByInstrumentId(currentPositions, instrument.id),
       });
       const order = priceToPlaceOrder({});
       await pushOrder(order);
@@ -43,7 +43,7 @@ interface RunAlgoEachCandleOptions {
   candle: Candle;
   algoName: string;
   instrument: Instrument;
-  quantity: Number;
+  price: Number;
 }
 
 export async function runAlgoEachCandle(options: RunAlgoEachCandleOptions) {
@@ -51,9 +51,10 @@ export async function runAlgoEachCandle(options: RunAlgoEachCandleOptions) {
   const algoFrom = options.candle.timestamp - algo.timeInterval;
   const algoTo = options.candle.timestamp + MinuteInMs;
   const algoCandles = await getOptimizedHistory(algoFrom, algoTo, options.instrument.id);
+  console.log(inDayRange(algo.startAt, algo.endAt, options.candle.timestamp));
   return inDayRange(algo.startAt, algo.endAt, options.candle.timestamp)
-    ? options.quantity === 0
+    ? options.price === 0
       ? algo.trade(algoCandles)
       : algo.squareoff(algoCandles)
-    : -options.quantity;
+    : -options.price;
 }
