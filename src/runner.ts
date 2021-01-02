@@ -51,7 +51,6 @@ export async function runAlgoEachCandle(options: RunAlgoEachCandleOptions) {
   const algoFrom = options.candle.timestamp - algo.timeInterval;
   const algoTo = options.candle.timestamp + MinuteInMs;
   const algoCandles = await getOptimizedHistory(algoFrom, algoTo, options.instrument.id);
-  console.log(inDayRange(algo.startAt, algo.endAt, options.candle.timestamp));
   return inDayRange(algo.startAt, algo.endAt, options.candle.timestamp)
     ? options.price === 0
       ? algo.trade(algoCandles)
