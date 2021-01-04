@@ -1,8 +1,13 @@
+import * as test from '@src/algos/test';
 import * as udts from '@src/algos/udts';
 
 export function getAlgo(name: string) {
-  if (name === 'udts') {
-    return udts;
+  switch (name) {
+    case 'udts':
+      return udts;
+    case 'test':
+      return test;
+    default:
+      return test;
   }
-  return udts;
 }
