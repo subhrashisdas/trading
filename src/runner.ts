@@ -2,7 +2,7 @@ import { Candle, convertInterval } from '@src/candle';
 import { HourInMs, Milliseconds, MinuteInMs, inDayRange } from '@src/date';
 import { Instrument, filteredInstruments } from '@src/instrument';
 import { Order, priceToPlaceOrder, pushOrder } from '@src/order';
-import { Position, getPositions, getQuantityByInstrumentId } from '@src/position';
+import { Position, getPositionByInstrumentId, getPositions } from '@src/position';
 import { getAlgo } from '@src/algo';
 import { getOptimizedHistory } from '@src/history';
 import { option } from 'commander';
@@ -23,12 +23,13 @@ export async function runAlgo(options: RunAlgoOptions) {
   for (const instrument of instruments) {
     const history = await getOptimizedHistory(options.from, options.to, instrument.id);
     const changedInterval = convertInterval(history, options.recurring);
+    const position = await getPositionByInstrumentId(currentPositions, instrument.id);
     for (const candle of changedInterval) {
       const price = await runAlgoEachCandle({
         candle,
         algoName: options.algoName,
         instrument,
-        price: await getQuantityByInstrumentId(currentPositions, instrument.id),
+        price: position ? (position.quantity > 0 ? position.average_price : -position.average_price) : 0,
       });
       const order = priceToPlaceOrder({});
       await pushOrder(order);

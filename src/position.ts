@@ -6,6 +6,7 @@ export interface Position {
   exchange: string;
   instrument_token: number;
   product: string;
+  average_price: number;
   quantity: number;
 }
 
@@ -24,7 +25,9 @@ export async function getPositions(): Promise<Position[]> {
   return body?.data?.day as Position[];
 }
 
-export async function getQuantityByInstrumentId(positions: Position[], instrumentId: number): Promise<number> {
-  const position = positions.find((position) => position.instrument_token === instrumentId);
-  return position ? position.quantity : 0;
+export async function getPositionByInstrumentId(
+  positions: Position[],
+  instrumentId: number
+): Promise<Position | undefined> {
+  return positions.find((position) => position.instrument_token === instrumentId);
 }

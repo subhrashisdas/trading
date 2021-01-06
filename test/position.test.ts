@@ -1,4 +1,4 @@
-import { getPositions, getQuantityByInstrumentId } from '@src/position';
+import { getPositionByInstrumentId, getPositions } from '@src/position';
 import { ok } from 'assert';
 
 export async function getPositionsTest() {
@@ -6,8 +6,8 @@ export async function getPositionsTest() {
   ok(positions.length >= 0);
 }
 
-export async function getQuantityByInstrumentIdTest() {
+export async function getPositionByInstrumentIdTest() {
   const positions = await getPositions();
-  const quantity = await getQuantityByInstrumentId(positions, 3926273);
-  ok(quantity === 0);
+  const position = await getPositionByInstrumentId(positions, 3926273);
+  // ok(position);
 }
