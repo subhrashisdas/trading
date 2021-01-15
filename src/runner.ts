@@ -1,7 +1,7 @@
 import { Candle, convertInterval } from '@src/candle';
 import { HourInMs, Milliseconds, MinuteInMs, inDayRange } from '@src/date';
 import { Instrument, filteredInstruments } from '@src/instrument';
-import { Order, priceToPlaceOrder, pushOrder } from '@src/order';
+import { Order, placeOrder, priceToPlaceOrder, pushOrder } from '@src/order';
 import { Position, getPositionByInstrumentId, getPositions } from '@src/position';
 import { getAlgo } from '@src/algo';
 import { getOptimizedHistory } from '@src/history';
@@ -31,10 +31,12 @@ export async function runAlgo(options: RunAlgoOptions) {
         instrument,
         price: position ? (position.quantity > 0 ? position.average_price : -position.average_price) : 0,
       });
-      const order = priceToPlaceOrder({});
-      await pushOrder(order);
-      if (options.isLive) {
-        await priceToPlaceOrder({});
+      if (price !== 0) {
+        const order = priceToPlaceOrder({ instrument, price, quantity: options.quantity });
+        await pushOrder(order);
+        if (options.isLive) {
+          await placeOrder(order);
+        }
       }
     }
   }

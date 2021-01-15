@@ -116,14 +116,25 @@ export async function getOrder(): Promise<Order[]> {
   return getJson('order');
 }
 
-export async function pushOrder(order: Order) {
+export async function pushOrder(order: PlaceOrderOptions) {
   const oldOrders = (await getJson('order')) || [];
   oldOrders.push(order);
   setJson('order', oldOrders);
 }
 
-export interface PriceToPlaceOrderOptions {}
+export interface PriceToPlaceOrderOptions {
+  instrument: Instrument;
+  price: number;
+  quantity: number;
+}
 
-export function priceToPlaceOrder(priceToPlaceOrderOptions: PriceToPlaceOrderOptions): Order {
-  return {} as Order;
+export function priceToPlaceOrder(options: PriceToPlaceOrderOptions): PlaceOrderOptions {
+  return {
+    exchange: options.instrument.segment,
+    tradingSymbol: options.instrument.tradingsymbol,
+    transactionType: options.quantity > 0 ? TransactionType.buy : TransactionType.sell,
+    quantity: options.quantity,
+    price: Math.abs(options.price),
+    triggerPrice: 0,
+  };
 }
