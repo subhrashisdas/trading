@@ -9,5 +9,5 @@ export async function getPositionsTest() {
 export async function getPositionByInstrumentIdTest() {
   const positions = await getPositions();
   const position = await getPositionByInstrumentId(positions, 3926273);
-  // ok(position);
+  ok(position);
 }

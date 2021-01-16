@@ -1,11 +1,10 @@
 import { Candle, convertInterval } from '@src/candle';
-import { HourInMs, Milliseconds, MinuteInMs, inDayRange } from '@src/date';
 import { Instrument, filteredInstruments } from '@src/instrument';
-import { Order, placeOrder, priceToPlaceOrder, pushOrder } from '@src/order';
+import { Milliseconds, MinuteInMs, inDayRange } from '@src/date';
 import { Position, getPositionByInstrumentId, getPositions } from '@src/position';
 import { getAlgo } from '@src/algo';
 import { getOptimizedHistory } from '@src/history';
-import { option } from 'commander';
+import { placeOrder, priceToPlaceOrder, pushOrder } from '@src/order';
 
 export interface RunAlgoOptions {
   from: Milliseconds;

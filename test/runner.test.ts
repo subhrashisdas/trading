@@ -1,4 +1,4 @@
-import { Instrument, Segment } from '@src/instrument';
+import { Instrument } from '@src/instrument';
 import { OhlvcCandle, convertOhlvcCandlesToTradeJson } from '@src/candle';
 import { deepStrictEqual } from 'assert';
 import { runAlgoEachCandle } from '@src/runner';
