@@ -20,7 +20,7 @@ export async function runAlgo(options: RunAlgoOptions) {
   const instruments = await filteredInstruments(options.instrumentNames);
   const currentPositions: Position[] = options.isLive ? await getPositions() : [];
   for (const instrument of instruments) {
-    const history = await getOptimizedHistory(options.from, options.to, instrument.id);
+    const history = await getOptimizedHistory(instrument.instrument_token, options.from, options.to);
     const changedInterval = convertInterval(history, options.recurring);
     const position = await getPositionByInstrumentId(currentPositions, instrument.id);
     for (const candle of changedInterval) {
@@ -52,7 +52,7 @@ export async function runAlgoEachCandle(options: RunAlgoEachCandleOptions) {
   const algo = getAlgo(options.algoName);
   const algoFrom = options.candle.timestamp - algo.timeInterval;
   const algoTo = options.candle.timestamp + MinuteInMs;
-  const algoCandles = await getOptimizedHistory(algoFrom, algoTo, options.instrument.id);
+  const algoCandles = await getOptimizedHistory(options.instrument.instrument_token, algoFrom, algoTo);
   return inDayRange(algo.startAt, algo.endAt, options.candle.timestamp)
     ? options.price === 0
       ? algo.trade(algoCandles)
