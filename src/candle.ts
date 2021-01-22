@@ -40,7 +40,7 @@ export function convertInterval(candles: Candle[], interval: Milliseconds) {
   return newCandles;
 }
 
-function convertOhlvcCandleToTradeJson(ohlvcCandle: OhlvcCandle) {
+export function convertOhlvcCandleToTradeJson(ohlvcCandle: OhlvcCandle) {
   return {
     timestamp: Date.parse(ohlvcCandle[0]),
     open: ohlvcCandle[1],
