@@ -56,11 +56,11 @@ export function convertOhlvcCandlesToTradeJson(ohlvcCandles: OhlvcCandle[]) {
 }
 
 export function trendCandles(candles: Candle[]) {
-  let dominatingCandle = candles.shift();
+  let dominatingCandle = candles[0];
   if (!dominatingCandle) {
     return;
   }
-  for (const currentCandle of candles) {
+  for (const currentCandle of candles.slice(1, candles.length)) {
     dominatingCandle = trendCandle(dominatingCandle, currentCandle);
   }
   return dominatingCandle;
