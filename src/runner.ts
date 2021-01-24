@@ -45,7 +45,7 @@ interface RunAlgoEachCandleOptions {
   candle: Candle;
   algoName: string;
   instrument: Instrument;
-  price: Number;
+  price: number;
 }
 
 export async function runAlgoEachCandle(options: RunAlgoEachCandleOptions) {
