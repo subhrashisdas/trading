@@ -11,6 +11,6 @@ export function trade(candles: Candle[]): number {
   return -100;
 }
 
-export function squareoff(candles: Candle[]): number {
+export function squareoff(price: number, candles: Candle[]): number {
   return +100;
 }
