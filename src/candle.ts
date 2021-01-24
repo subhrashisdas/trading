@@ -72,3 +72,7 @@ export function trendCandle(dominatingCandle: Candle, currentCandle: Candle) {
     ? dominatingCandle
     : currentCandle;
 }
+
+export function candleChange(candle?: Candle) {
+  return candle ? candle.close - candle.open : 0;
+}

@@ -1,4 +1,4 @@
-import { Candle, convertInterval, trendCandles } from '@src/candle';
+import { Candle, candleChange, convertInterval, trendCandles } from '@src/candle';
 import { DayInMs, HourInMs, MinuteInMs, WeekInMs } from '@src/date';
 
 export const candlesLimit = WeekInMs;
@@ -8,15 +8,27 @@ export const startAt = new Date(5 * HourInMs).getTime();
 export const endAt = new Date(10 * HourInMs).getTime();
 
 export function trade(candles: Candle[]): number {
-  // if daily, weekly and monthly trend is up-trend then it will go up
-  const dailyTrend = trendCandles(convertInterval(candles, DayInMs));
-  const weeklyTrend = trendCandles(convertInterval(candles, WeekInMs));
-  const monthlyTrend = trendCandles(convertInterval(candles, WeekInMs));
-  return -100;
+  const latestCandle = candles[candles.length - 1];
+  const dailyTrend = candleChange(trendCandles(convertInterval(candles, DayInMs)));
+  const weeklyTrend = candleChange(trendCandles(convertInterval(candles, WeekInMs)));
+  const monthlyTrend = candleChange(trendCandles(convertInterval(candles, WeekInMs)));
+  if (dailyTrend > 0 && weeklyTrend > 0 && monthlyTrend > 0) {
+    return latestCandle.open;
+  } else if (dailyTrend < 0 && weeklyTrend < 0 && monthlyTrend < 0) {
+    return -latestCandle.close;
+  } else {
+    return 0;
+  }
 }
 
 export function squareoff(price: number, candles: Candle[]): number {
-  // if daily trend will go down after that
-  const dailyTrend = trendCandles(convertInterval(candles, DayInMs));
-  return +100;
+  const latestCandle = candles[candles.length - 1];
+  const dailyTrend = candleChange(trendCandles(convertInterval(candles, DayInMs)));
+  if (dailyTrend > 0) {
+    return latestCandle.open;
+  } else if (dailyTrend < 0) {
+    return -latestCandle.close;
+  } else {
+    return 0;
+  }
 }

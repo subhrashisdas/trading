@@ -1,6 +1,7 @@
 import { MinuteInMs } from '@src/date';
 import {
   OhlvcCandle,
+  candleChange,
   convertInterval,
   convertOhlvcCandleToTradeJson,
   convertOhlvcCandlesToTradeJson,
@@ -37,4 +38,10 @@ export function trendCandlesTest() {
   ];
   const candles = convertOhlvcCandlesToTradeJson(trendCandlesFixturesAndResults);
   deepStrictEqual(trendCandles(candles), candles[2]);
+}
+
+export function candleChangeTest() {
+  const trendCandlesFixturesAndResults: OhlvcCandle = ['2020-11-10T09:15:00+0530', 10, 95, 5, 30, 0, 0];
+  const candle = convertOhlvcCandleToTradeJson(trendCandlesFixturesAndResults);
+  deepStrictEqual(candleChange(candle), 20);
 }
