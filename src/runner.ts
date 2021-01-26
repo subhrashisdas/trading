@@ -4,7 +4,7 @@ import { Milliseconds, MinuteInMs, inDayRange } from '@src/date';
 import { Position, getPositionByInstrumentId, getPositions } from '@src/position';
 import { getAlgo } from '@src/algo';
 import { getOptimizedHistory } from '@src/history';
-import { placeOrder, priceToPlaceOrder, pushOrder } from '@src/order';
+import { getOrder, placeOrder, priceToPlaceOrder, pushOrder } from '@src/order';
 
 export interface RunAlgoOptions {
   from: Milliseconds;
@@ -24,6 +24,10 @@ export async function runAlgo(options: RunAlgoOptions) {
     const changedInterval = convertInterval(history, options.recurring);
     const position = await getPositionByInstrumentId(currentPositions, instrument.id);
     for (const candle of changedInterval) {
+      const orders = await getOrder();
+      const latestOrder = orders[0];
+      // Here i did a mistake
+      // Orders have many candles
       const price = await runAlgoEachCandle({
         candle,
         algoName: options.algoName,
