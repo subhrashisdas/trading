@@ -1,4 +1,5 @@
-import { getPositionByInstrumentId, getPositions } from '@src/position';
+import { Instrument } from '@src/instrument';
+import { getPositionByInstrument, getPositions } from '@src/position';
 import { ok } from 'assert';
 
 export async function getPositionsTest() {
@@ -6,8 +7,13 @@ export async function getPositionsTest() {
   ok(positions.length >= 0);
 }
 
-export async function getPositionByInstrumentIdTest() {
+export async function getPositionByInstrumentTest() {
   const positions = await getPositions();
-  const position = await getPositionByInstrumentId(positions, 3926273);
+  const instrument: Instrument = {
+    tradingSymbol: 'RAIN',
+    instrumentToken: 3926273,
+    segment: 'NSE',
+  };
+  const position = await getPositionByInstrument(positions, instrument);
   ok(position);
 }

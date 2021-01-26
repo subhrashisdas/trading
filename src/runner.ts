@@ -1,7 +1,7 @@
 import { Candle, convertInterval } from '@src/candle';
 import { Instrument, filteredInstruments } from '@src/instrument';
 import { Milliseconds, MinuteInMs, inDayRange } from '@src/date';
-import { Position, getPositionByInstrumentId, getPositions } from '@src/position';
+import { Position, getPositionByInstrument, getPositions } from '@src/position';
 import { getAlgo } from '@src/algo';
 import { getOptimizedHistory } from '@src/history';
 import { getOrder, placeOrder, priceToPlaceOrder, pushOrder } from '@src/order';
@@ -20,9 +20,9 @@ export async function runAlgo(options: RunAlgoOptions) {
   const instruments = await filteredInstruments(options.instrumentNames);
   const currentPositions: Position[] = options.isLive ? await getPositions() : [];
   for (const instrument of instruments) {
-    const history = await getOptimizedHistory(instrument.instrument_token, options.from, options.to);
+    const history = await getOptimizedHistory(instrument.instrumentToken, options.from, options.to);
     const changedInterval = convertInterval(history, options.recurring);
-    const position = await getPositionByInstrumentId(currentPositions, instrument.id);
+    const position = await getPositionByInstrument(currentPositions, instrument);
     for (const candle of changedInterval) {
       const orders = await getOrder();
       const latestOrder = orders[0];
@@ -57,7 +57,7 @@ export async function runAlgoEachCandle(options: RunAlgoEachCandleOptions) {
   const algo = getAlgo(options.algoName);
   const algoFrom = options.candle.timestamp - algo.timeInterval;
   const algoTo = options.candle.timestamp + MinuteInMs;
-  const algoCandles = await getOptimizedHistory(options.instrument.instrument_token, algoFrom, algoTo);
+  const algoCandles = await getOptimizedHistory(options.instrument.instrumentToken, algoFrom, algoTo);
   return inDayRange(algo.startAt, algo.endAt, options.candle.timestamp)
     ? options.price === 0
       ? algo.trade(algoCandles)

@@ -103,7 +103,7 @@ export interface createPlaceOrderOptionOption {
 export function createPlaceOrderOption(options: createPlaceOrderOptionOption): PlaceOrderOptions {
   return {
     exchange: options.instrument.segment,
-    tradingSymbol: options.instrument.tradingsymbol,
+    tradingSymbol: options.instrument.tradingSymbol,
     transactionType: options.price > 0 ? TransactionType.buy : TransactionType.sell,
     quantity: options.quantity,
     price: options.price,
@@ -129,7 +129,7 @@ export interface PriceToPlaceOrderOptions {
 export function priceToPlaceOrder(options: PriceToPlaceOrderOptions): PlaceOrderOptions {
   return {
     exchange: options.instrument.segment,
-    tradingSymbol: options.instrument.tradingsymbol,
+    tradingSymbol: options.instrument.tradingSymbol,
     transactionType: options.quantity > 0 ? TransactionType.buy : TransactionType.sell,
     quantity: options.quantity,
     price: Math.abs(options.price),

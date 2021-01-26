@@ -1,13 +1,13 @@
 import { getCredentials } from '@src/token';
 import fetch from 'node-fetch';
 
-export interface MarketWatches {
+interface MarketWatches {
   id: number;
   name: string;
-  items: Instrument[];
+  items: MarketWatchInstrument[];
 }
 
-export interface Instrument {
+interface MarketWatchInstrument {
   // id: number;
   // weight: number;
   tradingsymbol: string;
@@ -19,12 +19,19 @@ export interface Instrument {
   // lot_size: number;
 }
 
+export interface Instrument {
+  tradingSymbol: string;
+  instrumentToken: number;
+  segment: string | Segment;
+}
+
 export enum Segment {
   Indices = 'INDICES',
   Nse = 'NSE',
+  Bse = 'BSE',
 }
 
-export async function instruments(): Promise<MarketWatches[]> {
+async function instruments(): Promise<MarketWatches[]> {
   const credentials = await getCredentials();
 
   const response = await fetch(`https://kite.zerodha.com/api/marketwatch`, {
@@ -42,8 +49,13 @@ export async function filteredInstruments(name: string[]): Promise<Instrument[]>
   const instrumentsData = await instruments();
   return instrumentsData
     .filter((item: MarketWatches) => name.includes(item.name))
-    .reduce<Instrument[]>((acc, item) => {
+    .reduce<MarketWatchInstrument[]>((acc, item) => {
       acc.push(...item.items);
       return acc;
-    }, []);
+    }, [])
+    .map((item) => ({
+      tradingSymbol: item.tradingsymbol,
+      instrumentToken: item.instrument_token,
+      segment: item.segment,
+    }));
 }

@@ -1,3 +1,4 @@
+import { Instrument } from './instrument';
 import { getCredentials } from '@src/token';
 import { jsonRequest } from '@src/request';
 
@@ -25,9 +26,9 @@ export async function getPositions(): Promise<Position[]> {
   return body?.data?.day as Position[];
 }
 
-export async function getPositionByInstrumentId(
+export async function getPositionByInstrument(
   positions: Position[],
-  instrumentId: number
+  instrument: Instrument
 ): Promise<Position | undefined> {
-  return positions.find((position) => position.instrument_token === instrumentId);
+  return positions.find((position) => position.instrument_token === instrument.instrumentToken);
 }
