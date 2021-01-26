@@ -5,36 +5,36 @@ import { getJson, setJson } from '@src/fs';
 import { jsonRequest } from '@src/request';
 
 export interface Order {
-  placed_by: string;
-  order_id: string;
-  exchange_order_id: null;
-  parent_order_id: null;
+  // placed_by: string;
+  // order_id: string;
+  // exchange_order_id: null;
+  // parent_order_id: null;
   status: string;
-  status_message: string;
-  status_message_raw: string;
+  // status_message: string;
+  // status_message_raw: string;
   order_timestamp: Date;
-  exchange_update_timestamp: null;
-  exchange_timestamp: null;
-  variety: string;
+  // exchange_update_timestamp: null;
+  // exchange_timestamp: null;
+  // variety: string;
   exchange: string;
   tradingsymbol: string;
   instrument_token: number;
-  order_type: string;
+  // order_type: string;
   transaction_type: TransactionType;
-  validity: string;
-  product: string;
+  // validity: string;
+  // product: string;
   quantity: number;
-  disclosed_quantity: number;
+  // disclosed_quantity: number;
   price: number;
-  trigger_price: number;
-  average_price: number;
-  filled_quantity: number;
-  pending_quantity: number;
-  cancelled_quantity: number;
-  market_protection: number;
-  meta: object;
-  tag: null;
-  guid: string;
+  // trigger_price: number;
+  // average_price: number;
+  // filled_quantity: number;
+  // pending_quantity: number;
+  // cancelled_quantity: number;
+  // market_protection: number;
+  // meta: object;
+  // tag: null;
+  // guid: string;
 }
 
 export async function getOrders(): Promise<Order[]> {

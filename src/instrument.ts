@@ -8,15 +8,15 @@ export interface MarketWatches {
 }
 
 export interface Instrument {
-  id: number;
-  weight: number;
+  // id: number;
+  // weight: number;
   tradingsymbol: string;
   instrument_token: number;
-  last_price: number;
+  // last_price: number;
   segment: string | Segment;
-  expiry: string;
-  strike: number;
-  lot_size: number;
+  // expiry: string;
+  // strike: number;
+  // lot_size: number;
 }
 
 export enum Segment {
