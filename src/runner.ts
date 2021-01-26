@@ -26,8 +26,9 @@ export async function runAlgo(options: RunAlgoOptions) {
     for (const candle of changedInterval) {
       const orders = await getOrder();
       const latestOrder = orders[0];
-      // Here i did a mistake
-      // Orders have many candles
+      // simplify order
+      // order -> position -> quantity
+      // clean order after each execution
       const price = await runAlgoEachCandle({
         candle,
         algoName: options.algoName,
