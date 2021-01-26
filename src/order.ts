@@ -63,7 +63,6 @@ export interface PlaceOrderOptions {
   transactionType: TransactionType;
   quantity: number;
   price: number;
-  triggerPrice: number;
 }
 
 export async function placeOrder(options: PlaceOrderOptions) {
@@ -85,7 +84,7 @@ export async function placeOrder(options: PlaceOrderOptions) {
       product: 'MIS',
       validity: 'DAY',
       disclosed_quantity: 0,
-      trigger_price: options.triggerPrice,
+      trigger_price: 0,
       squareoff: 0,
       stoploss: 0,
       trailing_stoploss: 0,
@@ -108,7 +107,6 @@ export function createPlaceOrderOption(options: createPlaceOrderOptionOption): P
     transactionType: options.price > 0 ? TransactionType.buy : TransactionType.sell,
     quantity: options.quantity,
     price: options.price,
-    triggerPrice: 0,
   };
 }
 
@@ -135,6 +133,5 @@ export function priceToPlaceOrder(options: PriceToPlaceOrderOptions): PlaceOrder
     transactionType: options.quantity > 0 ? TransactionType.buy : TransactionType.sell,
     quantity: options.quantity,
     price: Math.abs(options.price),
-    triggerPrice: 0,
   };
 }
