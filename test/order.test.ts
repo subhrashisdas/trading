@@ -1,7 +1,7 @@
-import { getOrders } from '@src/order';
-import { ok } from 'assert';
+// import { getOrders } from '@src/order';
+// import { ok } from 'assert';
 
-export async function getOrdersTest() {
-  const orders = await getOrders();
-  ok(orders.length >= 0);
-}
+// export async function getOrdersTest() {
+//   const orders = await getOrders();
+//   ok(orders.length >= 0);
+// }
