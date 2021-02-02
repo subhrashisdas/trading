@@ -26,7 +26,7 @@ export async function placeOrderTest() {
   };
   const transactionOptions: TransactionOptions = {
     instrument,
-    price: 100,
+    price: 132.5,
     quantity: 1,
   };
   await placeOrder(transactionOptions);
