@@ -24,14 +24,15 @@ export async function runAlgo(options: RunAlgoOptions) {
     const position = await getPositionByInstrument(currentPositions, instrument);
     let price = position?.price || 0;
     for (const candle of changedInterval) {
-      price = await runAlgoEachCandle({
+      const newPrice = await runAlgoEachCandle({
         candle,
         algoName: options.algoName,
         instrument,
         price,
       });
-      console.log(price);
-      if (price !== 0 && options.isLive) {
+      price = newPrice === 0 ? price : newPrice;
+      console.log(newPrice);
+      if (newPrice !== 0 && options.isLive) {
         await placeOrder({
           instrument: instrument,
           quantity: options.quantity,
