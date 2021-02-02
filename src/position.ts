@@ -11,8 +11,8 @@ interface Position {
 }
 
 enum OrderTransactionType {
-  buy = 'buy',
-  sell = 'sell',
+  BUY = 'BUY',
+  SELL = 'SELL',
 }
 
 export interface TransactionOptions {
@@ -23,17 +23,20 @@ export interface TransactionOptions {
 
 export async function placeOrder(options: TransactionOptions) {
   const credentials = await getCredentials();
-  const variety = 'co';
+  const variety = 'regular';
 
   await jsonRequest({
     url: 'https://kite.zerodha.com',
     path: `/oms/orders/${variety}`,
     method: 'POST',
+    headers: {
+      authorization: credentials.authorization,
+    },
     form: {
       variety: variety,
       exchange: options.instrument.segment,
       tradingsymbol: options.instrument.tradingSymbol,
-      transaction_type: options.quantity > 0 ? OrderTransactionType.buy : OrderTransactionType.sell,
+      transaction_type: options.quantity > 0 ? OrderTransactionType.BUY : OrderTransactionType.SELL,
       order_type: 'LIMIT',
       quantity: options.quantity,
       price: Math.abs(options.price),
@@ -41,8 +44,8 @@ export async function placeOrder(options: TransactionOptions) {
       validity: 'DAY',
       disclosed_quantity: 0,
       trigger_price: 0,
-      squareoff: 0,
-      stoploss: 0,
+      squareoff: 0.05,
+      stoploss: 0.05,
       trailing_stoploss: 0,
       user_id: credentials.userId,
     },
