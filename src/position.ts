@@ -6,7 +6,6 @@ interface Position {
   tradingsymbol: string;
   exchange: Segment;
   instrument_token: number;
-  product: string;
   average_price: number;
   quantity: number;
 }
