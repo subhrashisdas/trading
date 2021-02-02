@@ -30,14 +30,17 @@ export async function runAlgo(options: RunAlgoOptions) {
         instrument,
         price,
       });
-      price = newPrice === 0 ? price : newPrice;
-      console.log(newPrice);
-      if (newPrice !== 0 && options.isLive) {
-        await placeOrder({
-          instrument: instrument,
-          quantity: options.quantity,
-          price,
-        });
+
+      if (newPrice !== 0) {
+        price = newPrice;
+
+        if (options.isLive) {
+          await placeOrder({
+            instrument: instrument,
+            quantity: options.quantity,
+            price,
+          });
+        }
       }
     }
   }
