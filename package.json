@@ -37,6 +37,7 @@
     "trailingComma": "es5"
   },
   "jest": {
+    "testTimeout": 30000,
     "moduleNameMapper": {
       "^@src/(.*)$": "<rootDir>/src/$1",
       "^@test/(.*)$": "<rootDir>/test/$1"
