@@ -18,6 +18,7 @@ export interface RunAlgoOptions {
 export async function runAlgo(options: RunAlgoOptions) {
   const instruments = await filteredInstruments(options.instrumentNames);
   const currentPositions = options.isLive ? await getPositions() : [];
+  const newTransactions = [];
   for (const instrument of instruments) {
     const history = await getOptimizedHistory(instrument.instrumentToken, options.from, options.to);
     const changedInterval = convertInterval(history, options.recurring);
@@ -33,6 +34,11 @@ export async function runAlgo(options: RunAlgoOptions) {
 
       if (newPrice !== 0) {
         price = newPrice;
+        newTransactions.push({
+          instrument,
+          timestamp: candle.timestamp,
+          price: newPrice,
+        });
 
         if (options.isLive) {
           await placeOrder({
@@ -44,6 +50,7 @@ export async function runAlgo(options: RunAlgoOptions) {
       }
     }
   }
+  return newTransactions;
 }
 
 interface RunAlgoEachCandleOptions {
