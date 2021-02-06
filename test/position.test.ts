@@ -14,7 +14,7 @@ export async function getPositionByInstrumentTest() {
     instrumentToken: 3926273,
     segment: 'NSE',
   };
-  const position = await getPositionByInstrument(positions, instrument);
+  const position = getPositionByInstrument(positions, instrument);
   ok(position);
 }
 
@@ -31,6 +31,6 @@ export async function placeOrderTest() {
   };
   await placeOrder(transactionOptions);
   const positions = await getPositions();
-  const position = await getPositionByInstrument(positions, instrument);
+  const position = getPositionByInstrument(positions, instrument);
   ok(position);
 }

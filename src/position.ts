@@ -75,9 +75,9 @@ export async function getPositions(): Promise<TransactionOptions[]> {
   }));
 }
 
-export async function getPositionByInstrument(
+export function getPositionByInstrument(
   positions: TransactionOptions[],
   instrument: Instrument
-): Promise<TransactionOptions | undefined> {
+): TransactionOptions | undefined {
   return positions.find((position) => position.instrument.instrumentToken === instrument.instrumentToken);
 }

@@ -21,7 +21,7 @@ export async function runAlgo(options: RunAlgoOptions) {
   for (const instrument of instruments) {
     const history = await getOptimizedHistory(instrument.instrumentToken, options.from, options.to);
     const changedInterval = convertInterval(history, options.recurring);
-    const position = await getPositionByInstrument(currentPositions, instrument);
+    const position = getPositionByInstrument(currentPositions, instrument);
     let price = position?.price || 0;
     for (const candle of changedInterval) {
       const newPrice = await runAlgoEachCandle({
