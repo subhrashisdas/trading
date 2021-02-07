@@ -1,4 +1,4 @@
-import { DayInMs } from '@src/date';
+import { DayInMs, WeekInMs } from '@src/date';
 import { candlestick, filterCandles, getOptimizedHistory, history, invalidateCache } from '@src/history';
 import { convertOhlvcCandlesToTradeJson } from '@src/candle';
 import { deepStrictEqual, ok } from 'assert';
