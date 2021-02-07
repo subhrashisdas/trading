@@ -15,9 +15,9 @@ export interface RunAlgoOptions {
   instrumentNames: string[];
 }
 
-function logEvents(time: number, price: number) {
+function logEvents(time: number, price: number, profit: number) {
   const localDateTime = new Date(time).toLocaleString();
-  console.log(`${localDateTime}\t\t${price}`);
+  console.log(`${localDateTime}\t\t${price}\t\t${profit}`);
 }
 
 export async function runAlgo(options: RunAlgoOptions) {
@@ -29,6 +29,7 @@ export async function runAlgo(options: RunAlgoOptions) {
     const changedInterval = convertInterval(history, options.recurring);
     const position = getPositionByInstrument(currentPositions, instrument);
     let oldPrice = position?.price || 0;
+    let profit = 0;
     for (const candle of changedInterval) {
       const newPrice = await runAlgoEachCandle({
         candle,
@@ -37,8 +38,16 @@ export async function runAlgo(options: RunAlgoOptions) {
         price: oldPrice,
       });
 
+      if ((oldPrice > 0 && newPrice < 0) || (oldPrice < 0 && newPrice > 0)) {
+        profit = newPrice > 0 ? newPrice - oldPrice : -(newPrice - oldPrice);
+        oldPrice = 0;
+      } else if (newPrice !== 0) {
+        profit = 0;
+        oldPrice = newPrice;
+      }
+
       if (newPrice !== 0) {
-        logEvents(candle.timestamp, newPrice);
+        logEvents(candle.timestamp, newPrice, profit);
         if (options.isLive) {
           await placeOrder({
             instrument: instrument,
@@ -52,12 +61,6 @@ export async function runAlgo(options: RunAlgoOptions) {
             price: newPrice,
           });
         }
-      }
-
-      if ((oldPrice > 0 && newPrice < 0) || (oldPrice < 0 && newPrice > 0)) {
-        oldPrice = 0;
-      } else if (newPrice !== 0) {
-        oldPrice = newPrice;
       }
     }
   }
