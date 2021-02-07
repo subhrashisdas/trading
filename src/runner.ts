@@ -33,6 +33,7 @@ export async function runAlgo(options: RunAlgoOptions) {
       });
 
       if (newPrice !== 0) {
+        console.log(newPrice);
         price = newPrice;
         newTransactions.push({
           instrument,

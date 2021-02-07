@@ -1,18 +1,25 @@
+import { DayInMs, MinuteInMs } from '@src/date';
+import { runAlgo } from '@src/runner';
 import program from 'commander';
 
 program
-  .option('-l, --live', 'Execute Algo in production')
-  .option('-f, --from', 'Run algo from')
-  .option('-t, --to', 'Run algo to')
-  .option('-p, --paper', 'Paper trading')
-  .option('-a, --token <string>', 'Paper trading');
+  .option('-l, --limit <number>', 'Run algo limit in days')
+  .option('-o, --offset <number>', 'Run algo offset in days')
+  .option('-a, --algo <string>', 'Algo name')
+  .option('-q, --quantity <number>', 'Quantity')
+  .option('-p, --live', 'Live')
+  .option('-r, --recurring <number>', 'Recurring frequency in minutes')
+  .option('-i, --instruments <string...>', 'Instruments name')
+  .parse(process.argv);
 
-program.parse(process.argv);
-
-if (program.token) {
-  console.log(program.token);
-}
-
-if (program.live) {
-  console.log('I am live');
-}
+runAlgo({
+  from: Date.now() - program.offset * DayInMs,
+  to: Date.now() - program.limit * DayInMs,
+  algoName: program.algo,
+  quantity: program.quantity,
+  isLive: program.live,
+  recurring: program.recurring * MinuteInMs,
+  instrumentNames: program.instruments,
+})
+  .then()
+  .catch();
