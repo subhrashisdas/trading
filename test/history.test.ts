@@ -18,14 +18,21 @@ export async function normalHistoryTest() {
 
 export async function getOptimizedHistoryTest() {
   const id = 263433;
+  const timeMinus1 = new Date('2020-06-08').getTime();
+  const time0 = new Date('2020-06-14').getTime();
   const time1 = new Date('2020-06-18').getTime(); // Sat, Sun in between
   const time2 = new Date('2020-06-22').getTime();
   const time3 = new Date('2020-06-24').getTime();
   const time4 = new Date('2020-06-26').getTime(); // No included this data
+  const time5 = new Date('2020-07-02').getTime();
+  const time6 = new Date('2020-07-10').getTime();
 
   await invalidateCache(id);
   deepStrictEqual(await getOptimizedHistory(id, time2, time3), await history(id, time2, time3, DayInMs));
   deepStrictEqual(await getOptimizedHistory(id, time1, time4), await history(id, time1, time4, DayInMs));
+  deepStrictEqual(await getOptimizedHistory(id, time1, time4), await history(id, time1, time4, DayInMs));
+  deepStrictEqual(await getOptimizedHistory(id, time0, time5), await history(id, time0, time5, DayInMs));
+  deepStrictEqual(await getOptimizedHistory(id, timeMinus1, time6), await history(id, timeMinus1, time6, DayInMs));
 }
 
 export async function filterCandlesTest() {

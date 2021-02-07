@@ -13,6 +13,7 @@ export async function history(instrumentId: number, from: Milliseconds, to: Mill
   for (let newFrom = from; newFrom <= to; newFrom += timePeriod) {
     const possibleNewTo = newFrom + timePeriod;
     const newTo = possibleNewTo > to ? to : possibleNewTo;
+    // Be careful it is multiple
     if (newFrom !== newTo) {
       candles.push(...(await candlestick(instrumentId, newFrom, newTo)));
     }
@@ -61,9 +62,10 @@ export async function getOptimizedHistory(
   if (await exists(instrumentIdFilePath)) {
     const data: any = JSON.parse(await (await readFile(instrumentIdFilePath)).toString());
     const candles: Candle[] = data.candles;
+    const previousCandlesLength = candles.length;
 
     if (from < data.from) {
-      const leftCandles = await history(instrumentId, from, data.from - DayInMs);
+      const leftCandles = await history(instrumentId, from, data.from);
       candles.unshift(...leftCandles);
     }
 
@@ -72,10 +74,19 @@ export async function getOptimizedHistory(
       candles.push(...rightCandles);
     }
 
+    const currentCandlesLength = candles.length;
+    if (previousCandlesLength !== currentCandlesLength) {
+      await writeFile(
+        instrumentIdFilePath,
+        JSON.stringify({ from: Math.min(from, data.from), to: Math.max(to, data.to), candles: candles, instrumentId }),
+        { flag: 'w' }
+      );
+    }
+
     return filterCandles(candles, from, to);
   } else {
     const candles: Candle[] = await history(instrumentId, from, to);
-    await writeFile(instrumentIdFilePath, JSON.stringify({ from, to, candles, instrumentId }), { flag: 'wx' });
+    await writeFile(instrumentIdFilePath, JSON.stringify({ from, to, candles, instrumentId }), { flag: 'w' });
     return filterCandles(candles, from, to);
   }
 }
