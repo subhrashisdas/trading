@@ -1,6 +1,6 @@
-import { Instrument } from '@src/instrument';
-import { TransactionOptions, getPositionByInstrument, getPositions, placeOrder } from '@src/position';
-import { ok } from 'assert';
+import { Instrument } from "@src/instrument";
+import { TransactionOptions, getPositionByInstrument, getPositions, placeOrder } from "@src/position";
+import { ok } from "assert";
 
 export async function getPositionsTest() {
   const positions = await getPositions();
@@ -10,9 +10,9 @@ export async function getPositionsTest() {
 export async function getPositionByInstrumentTest() {
   const positions = await getPositions();
   const instrument: Instrument = {
-    tradingSymbol: 'RAIN',
+    tradingSymbol: "RAIN",
     instrumentToken: 3926273,
-    segment: 'NSE',
+    segment: "NSE"
   };
   const position = getPositionByInstrument(positions, instrument);
   ok(position);
@@ -20,14 +20,14 @@ export async function getPositionByInstrumentTest() {
 
 export async function placeOrderTest() {
   const instrument: Instrument = {
-    tradingSymbol: 'RAIN',
+    tradingSymbol: "RAIN",
     instrumentToken: 3926273,
-    segment: 'NSE',
+    segment: "NSE"
   };
   const transactionOptions: TransactionOptions = {
     instrument,
     price: 132.5,
-    quantity: 1,
+    quantity: 1
   };
   await placeOrder(transactionOptions);
   const positions = await getPositions();

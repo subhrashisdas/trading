@@ -1,10 +1,10 @@
-import { objectToForm } from '@src/request';
-import { readFile, writeFile } from 'fs/promises';
-import envData from '../.env.json';
-import fetch from 'node-fetch';
-import path from 'path';
+import { objectToForm } from "@src/request";
+import { readFile, writeFile } from "fs/promises";
+import envData from "../.env.json";
+import fetch from "node-fetch";
+import path from "path";
 
-const folderLocation = path.join(__filename, '../../.cache/token.txt');
+const folderLocation = path.join(__filename, "../../.cache/token.txt");
 
 interface Config {
   readonly userId: string;
@@ -18,37 +18,37 @@ interface LoginData {
 }
 
 async function login(config: Config) {
-  const response = await fetch('https://kite.zerodha.com/api/login', {
-    method: 'POST',
+  const response = await fetch("https://kite.zerodha.com/api/login", {
+    method: "POST",
     body: objectToForm({
       user_id: config.userId,
-      password: config.password,
-    }),
+      password: config.password
+    })
   });
 
   const body = await response.json();
 
   return {
     requestId: (body as any)?.data?.request_id as string,
-    kfSession: response.headers.get('set-cookie')?.match('kf_session=(.*);')?.[1] as string,
+    kfSession: response.headers.get("set-cookie")?.match("kf_session=(.*);")?.[1] as string
   };
 }
 
 async function twoFa(config: Config, loginData: LoginData) {
-  const response = await fetch('https://kite.zerodha.com/api/twofa', {
-    method: 'POST',
+  const response = await fetch("https://kite.zerodha.com/api/twofa", {
+    method: "POST",
     headers: {
-      cookie: `kf_session=${loginData.kfSession}`,
+      cookie: `kf_session=${loginData.kfSession}`
     },
     body: objectToForm({
       user_id: config.userId,
       request_id: loginData.requestId,
-      twofa_value: config.pin,
-    }),
+      twofa_value: config.pin
+    })
   });
 
   return {
-    authorization: `enctoken ${JSON.stringify(response.headers.get('set-cookie')).match('enctoken=(.*); path=')?.[1]}`,
+    authorization: `enctoken ${JSON.stringify(response.headers.get("set-cookie")).match("enctoken=(.*); path=")?.[1]}`
   };
 }
 
@@ -57,7 +57,7 @@ async function generateCredentials(config: Config) {
   const twoFaData = await twoFa(config, loginData);
   return {
     ...config,
-    ...twoFaData,
+    ...twoFaData
   };
 }
 

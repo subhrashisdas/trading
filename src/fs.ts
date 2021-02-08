@@ -1,7 +1,7 @@
-import { Milliseconds } from '@src/date';
-import { access, readFile, unlink, writeFile } from 'fs/promises';
-import { deepStrictEqual } from 'assert';
-import path from 'path';
+import { Milliseconds } from "@src/date";
+import { access, readFile, unlink, writeFile } from "fs/promises";
+import { deepStrictEqual } from "assert";
+import path from "path";
 
 export async function exists(filePath: string): Promise<Boolean> {
   try {
@@ -21,7 +21,7 @@ export async function deleteFile(filePath: string): Promise<Boolean> {
   }
 }
 
-const folderLocation = path.join(__filename, '../../.cache');
+const folderLocation = path.join(__filename, "../../.cache");
 
 export function filePath(key: string) {
   return path.join(folderLocation, key);

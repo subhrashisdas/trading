@@ -1,10 +1,10 @@
-import { deepStrictEqual } from 'assert';
-import { deleteJson, functionCache, getJson, setJson } from '@src/fs';
+import { deepStrictEqual } from "assert";
+import { deleteJson, functionCache, getJson, setJson } from "@src/fs";
 
 export async function setAndGetJsonTest() {
   const now = Date.now();
-  const key = 'foo';
-  const data = { foo: 'bar' };
+  const key = "foo";
+  const data = { foo: "bar" };
 
   await setJson(key, data, now + 1000);
   deepStrictEqual(await getJson(key), data);

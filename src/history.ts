@@ -1,12 +1,12 @@
-import { Candle, convertOhlvcCandlesToTradeJson } from '@src/candle';
-import { Milliseconds, WeekInMs, shieldTimeFromFuture } from '@src/date';
-import { deleteFile, exists } from '@src/fs';
-import { format } from 'date-fns';
-import { getCredentials } from '@src/token';
-import { inRange } from 'lodash';
-import { jsonRequest } from '@src/request';
-import { readFile, writeFile } from 'fs/promises';
-import path from 'path';
+import { Candle, convertOhlvcCandlesToTradeJson } from "@src/candle";
+import { Milliseconds, WeekInMs, shieldTimeFromFuture } from "@src/date";
+import { deleteFile, exists } from "@src/fs";
+import { format } from "date-fns";
+import { getCredentials } from "@src/token";
+import { inRange } from "lodash";
+import { jsonRequest } from "@src/request";
+import { readFile, writeFile } from "fs/promises";
+import path from "path";
 
 export async function history(instrumentId: number, from: Milliseconds, to: Milliseconds, timePeriod = 8 * WeekInMs) {
   const candles = [];
@@ -21,7 +21,7 @@ export async function history(instrumentId: number, from: Milliseconds, to: Mill
   return candles;
 }
 
-const folderLocation = path.join(__filename, '../../.cache/');
+const folderLocation = path.join(__filename, "../../.cache/");
 
 export async function candlestick(instrumentId: number, from: Milliseconds, to: Milliseconds) {
   const credentials = await getCredentials();
@@ -29,17 +29,17 @@ export async function candlestick(instrumentId: number, from: Milliseconds, to: 
   // If 'from' and 'to' are in future both 'from' and 'to' defaults to current date
   // Kite 'from' timestamp is start of the day and 'to' timestamp is end of the day
   const { body } = await jsonRequest({
-    method: 'GET',
-    url: 'https://kite.zerodha.com',
+    method: "GET",
+    url: "https://kite.zerodha.com",
     path: `oms/instruments/historical/${instrumentId}/minute`,
     headers: {
-      authorization: credentials.authorization,
+      authorization: credentials.authorization
     },
     params: {
-      from: format(shieldTimeFromFuture(from), 'yyyy-MM-dd'),
-      to: format(shieldTimeFromFuture(to), 'yyyy-MM-dd'),
-      oi: 0,
-    },
+      from: format(shieldTimeFromFuture(from), "yyyy-MM-dd"),
+      to: format(shieldTimeFromFuture(to), "yyyy-MM-dd"),
+      oi: 0
+    }
   });
   return filterCandles(convertOhlvcCandlesToTradeJson(body?.data?.candles), from, to);
 }
@@ -79,14 +79,14 @@ export async function getOptimizedHistory(
       await writeFile(
         instrumentIdFilePath,
         JSON.stringify({ from: Math.min(from, data.from), to: Math.max(to, data.to), candles: candles, instrumentId }),
-        { flag: 'w' }
+        { flag: "w" }
       );
     }
 
     return filterCandles(candles, from, to);
   } else {
     const candles: Candle[] = await history(instrumentId, from, to);
-    await writeFile(instrumentIdFilePath, JSON.stringify({ from, to, candles, instrumentId }), { flag: 'w' });
+    await writeFile(instrumentIdFilePath, JSON.stringify({ from, to, candles, instrumentId }), { flag: "w" });
     return filterCandles(candles, from, to);
   }
 }

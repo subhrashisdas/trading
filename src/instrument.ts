@@ -1,5 +1,5 @@
-import { getCredentials } from '@src/token';
-import fetch from 'node-fetch';
+import { getCredentials } from "@src/token";
+import fetch from "node-fetch";
 
 interface MarketWatches {
   id: number;
@@ -26,19 +26,19 @@ export interface Instrument {
 }
 
 export enum Segment {
-  Indices = 'INDICES',
-  Nse = 'NSE',
-  Bse = 'BSE',
+  Indices = "INDICES",
+  Nse = "NSE",
+  Bse = "BSE"
 }
 
 async function instruments(): Promise<MarketWatches[]> {
   const credentials = await getCredentials();
 
   const response = await fetch(`https://kite.zerodha.com/api/marketwatch`, {
-    method: 'GET',
+    method: "GET",
     headers: {
-      authorization: credentials.authorization,
-    },
+      authorization: credentials.authorization
+    }
   });
 
   const body = await response.json();
@@ -56,6 +56,6 @@ export async function filteredInstruments(name: string[]): Promise<Instrument[]>
     .map(item => ({
       tradingSymbol: item.tradingsymbol,
       instrumentToken: item.instrument_token,
-      segment: item.segment,
+      segment: item.segment
     }));
 }

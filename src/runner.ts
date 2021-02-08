@@ -1,9 +1,9 @@
-import { Candle, convertInterval } from '@src/candle';
-import { Instrument, filteredInstruments } from '@src/instrument';
-import { Milliseconds, MinuteInMs, inDayRange } from '@src/date';
-import { getAlgo } from '@src/algo';
-import { getOptimizedHistory } from '@src/history';
-import { getPositionByInstrument, getPositions, placeOrder } from '@src/position';
+import { Candle, convertInterval } from "@src/candle";
+import { Instrument, filteredInstruments } from "@src/instrument";
+import { Milliseconds, MinuteInMs, inDayRange } from "@src/date";
+import { getAlgo } from "@src/algo";
+import { getOptimizedHistory } from "@src/history";
+import { getPositionByInstrument, getPositions, placeOrder } from "@src/position";
 
 export interface RunAlgoOptions {
   from: Milliseconds;
@@ -35,7 +35,7 @@ export async function runAlgo(options: RunAlgoOptions) {
         candle,
         algoName: options.algoName,
         instrument,
-        price: oldPrice,
+        price: oldPrice
       });
 
       if ((oldPrice > 0 && newPrice < 0) || (oldPrice < 0 && newPrice > 0)) {
@@ -52,13 +52,13 @@ export async function runAlgo(options: RunAlgoOptions) {
           await placeOrder({
             instrument: instrument,
             quantity: options.quantity,
-            price: newPrice,
+            price: newPrice
           });
 
           newTransactions.push({
             instrument,
             timestamp: candle.timestamp,
-            price: newPrice,
+            price: newPrice
           });
         }
       }

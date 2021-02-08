@@ -1,7 +1,7 @@
-import { URLSearchParams } from 'url';
-import fetch from 'node-fetch';
-import path from 'path';
-import querystring from 'querystring';
+import { URLSearchParams } from "url";
+import fetch from "node-fetch";
+import path from "path";
+import querystring from "querystring";
 
 export interface jsonRequestOptions {
   url: string;
@@ -23,29 +23,29 @@ export async function jsonRequest(options: jsonRequestOptions): Promise<jsonRequ
   let completeUrl = options.url;
 
   if (options.path) {
-    completeUrl = path.join(completeUrl, options.path).replace(':/', '://');
+    completeUrl = path.join(completeUrl, options.path).replace(":/", "://");
   }
 
   if (options.params) {
     const params = querystring.stringify(options.params);
-    completeUrl = completeUrl + '?' + params;
+    completeUrl = completeUrl + "?" + params;
   }
 
   const fetchOptions: any = {
     method: options.method,
-    headers: options.headers || {},
+    headers: options.headers || {}
   };
 
-  fetchOptions.headers['User-Agent'] = 'Web/2.0';
+  fetchOptions.headers["User-Agent"] = "Web/2.0";
 
   if (options.body) {
     fetchOptions.body = JSON.stringify(options.body);
-    fetchOptions.headers['Content-Type'] = 'application/json';
+    fetchOptions.headers["Content-Type"] = "application/json";
   }
 
   if (options.form) {
     fetchOptions.body = objectToForm(options.form);
-    fetchOptions.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+    fetchOptions.headers["Content-Type"] = "application/x-www-form-urlencoded";
   }
 
   const response = await fetch(completeUrl, fetchOptions);
@@ -53,7 +53,7 @@ export async function jsonRequest(options: jsonRequestOptions): Promise<jsonRequ
   return {
     body: await response.json(),
     status: response.status,
-    headers: response.headers.raw(),
+    headers: response.headers.raw()
   };
 }
 

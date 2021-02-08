@@ -1,9 +1,9 @@
-import { Candle } from '@src/candle';
-import { HourInMs, MinuteInMs, WeekInMs } from '@src/date';
+import { Candle } from "@src/candle";
+import { HourInMs, MinuteInMs, WeekInMs } from "@src/date";
 
 export const candlesLimit = WeekInMs;
 export const timeInterval = 5 * MinuteInMs;
-export const name = 'uni';
+export const name = "uni";
 export const startAt = new Date(5 * HourInMs).getTime();
 export const endAt = new Date(10 * HourInMs).getTime();
 

@@ -1,5 +1,5 @@
-import { Milliseconds } from '@src/date';
-import { inRange } from 'lodash';
+import { Milliseconds } from "@src/date";
+import { inRange } from "lodash";
 
 export interface Candle {
   timestamp: number;
@@ -19,7 +19,7 @@ function mergeCandle(oldCandle: Candle, newCandle: Candle): Candle {
     high: Math.max(oldCandle.high, newCandle.high),
     low: Math.min(oldCandle.low, newCandle.low),
     close: newCandle.close,
-    volume: oldCandle.volume + newCandle.volume,
+    volume: oldCandle.volume + newCandle.volume
   };
 }
 
@@ -47,7 +47,7 @@ export function convertOhlvcCandleToTradeJson(ohlvcCandle: OhlvcCandle) {
     high: ohlvcCandle[2],
     low: ohlvcCandle[3],
     close: ohlvcCandle[4],
-    volume: ohlvcCandle[5],
+    volume: ohlvcCandle[5]
   };
 }
 
