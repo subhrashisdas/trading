@@ -92,7 +92,7 @@ export async function getOptimizedHistory(
 }
 
 export function filterCandles(candles: Candle[], from: Milliseconds, to: Milliseconds) {
-  return candles.filter((candle) => inRange(candle.timestamp, from, to));
+  return candles.filter(candle => inRange(candle.timestamp, from, to));
 }
 
 export async function invalidateCache(instrumentId: number) {

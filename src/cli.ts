@@ -1,5 +1,6 @@
 import { DayInMs, MinuteInMs } from '@src/date';
 import { runAlgo } from '@src/runner';
+import cron from 'node-cron';
 import program from 'commander';
 
 program
@@ -24,7 +25,20 @@ async function main() {
       instrumentNames: program.instruments,
     });
   } else {
+    cron.schedule(`*/${program.recurring} * * * *`, async () => {
+      await runAlgo({
+        from: Date.now() - program.recurring * MinuteInMs,
+        to: Date.now(),
+        algoName: program.algo,
+        quantity: program.quantity,
+        isLive: program.live,
+        recurring: program.recurring * MinuteInMs,
+        instrumentNames: program.instruments,
+      });
+    });
   }
 }
 
-main().then(console.log).catch(console.error);
+main()
+  .then(console.log)
+  .catch(console.error);

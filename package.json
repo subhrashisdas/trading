@@ -48,6 +48,7 @@
     ]
   },
   "devDependencies": {
+    "@types/node-cron": "^2.0.3",
     "eslint-config-prettier": "^7.1.0",
     "eslint-plugin-sort-imports-es6-autofix": "^0.5.0",
     "jest": "^26.6.3",

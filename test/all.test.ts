@@ -4,7 +4,7 @@ import { readdirSync, statSync } from 'fs';
 let files: string[] = [];
 
 function throughDirectory(Directory: string) {
-  readdirSync(Directory).forEach((File) => {
+  readdirSync(Directory).forEach(File => {
     const absolute = join(Directory, File);
     if (statSync(absolute).isDirectory()) {
       return throughDirectory(absolute);
