@@ -1,5 +1,5 @@
 import { Candle, convertOhlvcCandlesToTradeJson } from '@src/candle';
-import { DayInMs, Milliseconds, WeekInMs, shieldTimeFromFuture } from '@src/date';
+import { Milliseconds, WeekInMs, shieldTimeFromFuture } from '@src/date';
 import { deleteFile, exists } from '@src/fs';
 import { format } from 'date-fns';
 import { getCredentials } from '@src/token';

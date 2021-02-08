@@ -12,14 +12,19 @@ program
   .option('-i, --instruments <string...>', 'Instruments name')
   .parse(process.argv);
 
-runAlgo({
-  from: Date.now() - program.offset * DayInMs,
-  to: Date.now() - program.limit * DayInMs,
-  algoName: program.algo,
-  quantity: program.quantity,
-  isLive: program.live,
-  recurring: program.recurring * MinuteInMs,
-  instrumentNames: program.instruments,
-})
-  .then()
-  .catch();
+async function main() {
+  if (program.live) {
+    await runAlgo({
+      from: Date.now() - program.offset * DayInMs,
+      to: Date.now() - program.limit * DayInMs,
+      algoName: program.algo,
+      quantity: program.quantity,
+      isLive: program.live,
+      recurring: program.recurring * MinuteInMs,
+      instrumentNames: program.instruments,
+    });
+  } else {
+  }
+}
+
+main().then(console.log).catch(console.error);
