@@ -23,10 +23,9 @@ program
   .option("-i, --instruments <string...>", "Instruments name")
   .parse(process.argv);
 
-const programData: ProgramData = program as any;
-
+const programData: ProgramData = program.opts() as any;
 async function main() {
-  if (programData.live) {
+  if (!programData.live) {
     await runAlgo({
       from: Date.now() - programData.offset * DayInMs,
       to: Date.now() - programData.limit * DayInMs,
@@ -51,4 +50,4 @@ async function main() {
   }
 }
 
-main().then(console.log).catch(console.error);
+main().then().catch(console.error);
