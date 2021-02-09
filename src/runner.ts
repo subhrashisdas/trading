@@ -28,12 +28,12 @@ function logEvents(
   console.log(
     [
       localDateTime,
-      price,
-      profit,
-      totalProfitCount,
-      totalLossCount,
-      profitByLossCountRatio.toFixed(2),
-      profitByLossValueRatio.toFixed(2)
+      "₹" + price,
+      "P = ₹" + profit,
+      "P = " + totalProfitCount,
+      "L = " + totalLossCount,
+      "P/L = " + profitByLossCountRatio.toFixed(2),
+      "P/L = ₹" + profitByLossValueRatio.toFixed(2)
     ].join("\t\t")
   );
 }
