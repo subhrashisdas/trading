@@ -64,7 +64,7 @@ export async function getPositions(): Promise<TransactionOptions[]> {
     }
   });
 
-  return (body?.data?.day as Position[]).map(item => ({
+  return (body?.data?.day as Position[]).map((item) => ({
     instrument: ({
       tradingsymbol: item.tradingsymbol,
       instrument_token: item.instrument_token,
@@ -79,5 +79,5 @@ export function getPositionByInstrument(
   positions: TransactionOptions[],
   instrument: Instrument
 ): TransactionOptions | undefined {
-  return positions.find(position => position.instrument.instrumentToken === instrument.instrumentToken);
+  return positions.find((position) => position.instrument.instrumentToken === instrument.instrumentToken);
 }

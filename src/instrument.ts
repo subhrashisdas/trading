@@ -53,7 +53,7 @@ export async function filteredInstruments(name: string[]): Promise<Instrument[]>
       acc.push(...item.items);
       return acc;
     }, [])
-    .map(item => ({
+    .map((item) => ({
       tradingSymbol: item.tradingsymbol,
       instrumentToken: item.instrument_token,
       segment: item.segment
