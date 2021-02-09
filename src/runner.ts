@@ -15,9 +15,27 @@ export interface RunAlgoOptions {
   instrumentNames: string[];
 }
 
-function logEvents(time: number, price: number, profit: number) {
+function logEvents(
+  time: number,
+  price: number,
+  profit: number,
+  totalProfitCount: number,
+  totalLossCount: number,
+  profitByLossCountRatio: number,
+  profitByLossValueRatio: number
+) {
   const localDateTime = new Date(time).toLocaleString();
-  console.log(`${localDateTime}\t\t${price}\t\t${profit}`);
+  console.log(
+    [
+      localDateTime,
+      price,
+      profit,
+      totalProfitCount,
+      totalLossCount,
+      profitByLossCountRatio.toFixed(2),
+      profitByLossValueRatio.toFixed(2)
+    ].join("\t\t")
+  );
 }
 
 export async function runAlgo(options: RunAlgoOptions) {
@@ -30,6 +48,16 @@ export async function runAlgo(options: RunAlgoOptions) {
     const position = getPositionByInstrument(currentPositions, instrument);
     let oldPrice = position?.price || 0;
     let profit = 0;
+
+    let totalProfitValue = 0;
+    let totalLossValue = 0;
+
+    let totalProfitCount = 0;
+    let totalLossCount = 0;
+
+    let profitByLossCountRatio = 0;
+    let profitByLossValueRatio = 0;
+
     for (const candle of changedInterval) {
       const newPrice = await runAlgoEachCandle({
         candle,
@@ -41,13 +69,27 @@ export async function runAlgo(options: RunAlgoOptions) {
       if ((oldPrice > 0 && newPrice < 0) || (oldPrice < 0 && newPrice > 0)) {
         profit = newPrice > 0 ? newPrice - oldPrice : -(newPrice - oldPrice);
         oldPrice = 0;
+
+        // Analytics
+        totalProfitCount = newPrice + oldPrice;
+        totalLossCount = totalProfitCount > 0 ? ++totalLossCount : totalLossCount;
+        profitByLossCountRatio = totalProfitCount / totalLossCount;
+        profitByLossValueRatio = totalProfitValue / totalLossValue;
       } else if (newPrice !== 0) {
         profit = 0;
         oldPrice = newPrice;
       }
 
       if (newPrice !== 0) {
-        logEvents(candle.timestamp, newPrice, profit);
+        logEvents(
+          candle.timestamp,
+          newPrice,
+          profit,
+          totalProfitCount,
+          totalLossCount,
+          profitByLossCountRatio,
+          profitByLossValueRatio
+        );
         if (options.isLive) {
           await placeOrder({
             instrument: instrument,
