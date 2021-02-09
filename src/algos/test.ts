@@ -12,5 +12,5 @@ export function trade(candles: Candle[]): number {
 }
 
 export function squareoff(price: Number, candles: Candle[]): number {
-  return -100;
+  return -90;
 }

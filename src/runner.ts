@@ -67,14 +67,16 @@ export async function runAlgo(options: RunAlgoOptions) {
       });
 
       if ((oldPrice > 0 && newPrice < 0) || (oldPrice < 0 && newPrice > 0)) {
-        profit = newPrice > 0 ? newPrice - oldPrice : -(newPrice - oldPrice);
-        oldPrice = 0;
-
         // Analytics
-        totalProfitCount = newPrice + oldPrice;
-        totalLossCount = totalProfitCount > 0 ? ++totalLossCount : totalLossCount;
-        profitByLossCountRatio = totalProfitCount / totalLossCount;
-        profitByLossValueRatio = totalProfitValue / totalLossValue;
+        profit = newPrice + oldPrice;
+        totalProfitValue = profit > 0 ? totalProfitValue + profit : totalProfitValue;
+        totalLossValue = profit < 0 ? totalLossValue + profit : totalLossValue;
+        totalProfitCount = profit > 0 ? ++totalProfitCount : totalProfitCount;
+        totalLossCount = profit < 0 ? ++totalLossCount : totalLossCount;
+        profitByLossCountRatio = totalProfitCount / (totalLossCount + 1);
+        profitByLossValueRatio = totalProfitValue / (totalLossValue + 1);
+
+        oldPrice = 0;
       } else if (newPrice !== 0) {
         profit = 0;
         oldPrice = newPrice;
