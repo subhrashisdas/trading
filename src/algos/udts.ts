@@ -8,7 +8,11 @@ export const name = "udts";
 export const startAt = new Date(5 * HourInMs).getTime();
 export const endAt = new Date(10 * HourInMs).getTime();
 
-// TODO: I am missing 15 minutes chart
+// TODO: Missing 15 minutes chart
+// TODO: Test for buy only first
+// TODO: Stoploss fix
+// TODO: PIVOT
+// TODO: 
 export function trade(candles: Candle[]): number {
   const latestCandle = candles[candles.length - 1];
   const dailyTrend = candleChange(trendCandles(lodash.takeRight(convertInterval(candles, DayInMs), 4)));
