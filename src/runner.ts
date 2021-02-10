@@ -28,8 +28,8 @@ function logEvents(
   console.log(
     [
       localDateTime,
-      "₹" + price,
-      "P = ₹" + profit,
+      "₹" + price.toFixed(2),
+      "P = ₹" + profit.toFixed(2),
       "P = " + totalProfitCount,
       "L = " + totalLossCount,
       "P/L = " + profitByLossCountRatio.toFixed(2),
@@ -68,7 +68,7 @@ export async function runAlgo(options: RunAlgoOptions) {
 
       if ((oldPrice > 0 && newPrice < 0) || (oldPrice < 0 && newPrice > 0)) {
         // Analytics
-        profit = newPrice + oldPrice;
+        profit = oldPrice > 0 ? Math.abs(newPrice) - Math.abs(oldPrice) : Math.abs(oldPrice) - Math.abs(newPrice);
         totalProfitValue = profit > 0 ? totalProfitValue + profit : totalProfitValue;
         totalLossValue = profit < 0 ? totalLossValue + profit : totalLossValue;
         totalProfitCount = profit > 0 ? ++totalProfitCount : totalProfitCount;

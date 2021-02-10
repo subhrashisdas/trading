@@ -15,19 +15,38 @@ export function trade(candles: Candle[]): number {
   if (dailyTrend > 0 && weeklyTrend > 0 && monthlyTrend > 0) {
     return latestCandle.close;
   } else if (dailyTrend < 0 && weeklyTrend < 0 && monthlyTrend < 0) {
-    return -latestCandle.open;
+    return -latestCandle.close;
   } else {
     return 0;
   }
 }
 
+// export function squareoff(price: number, candles: Candle[]): number {
+//   const latestCandle = candles[candles.length - 1];
+//   const dailyTrend = candleChange(trendCandles(convertInterval(candles, DayInMs)));
+//   if (dailyTrend < 0 && price > 0) {
+//     return -latestCandle.close;
+//   } else if (dailyTrend > 0 && price < 0) {
+//     return latestCandle.close;
+//   } else {
+//     return 0;
+//   }
+// }
+
 export function squareoff(price: number, candles: Candle[]): number {
   const latestCandle = candles[candles.length - 1];
-  const dailyTrend = candleChange(trendCandles(convertInterval(candles, DayInMs)));
-  if (dailyTrend > 0) {
-    return latestCandle.open;
-  } else if (dailyTrend < 0) {
-    return -latestCandle.close;
+  if (price > 0) {
+    const percentUp = ((latestCandle.close - price) / price) * 100;
+    if (percentUp > 1 || percentUp < -1) {
+      return -latestCandle.close;
+    }
+    return 0;
+  } else if (price < 0) {
+    const percentUp = ((latestCandle.close - Math.abs(price)) / price) * 100;
+    if (percentUp > 1 || percentUp < -1) {
+      return latestCandle.close;
+    }
+    return 0;
   } else {
     return 0;
   }
