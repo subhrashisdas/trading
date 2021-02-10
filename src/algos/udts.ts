@@ -13,9 +13,9 @@ export function trade(candles: Candle[]): number {
   const weeklyTrend = candleChange(trendCandles(convertInterval(candles, WeekInMs)));
   const monthlyTrend = candleChange(trendCandles(convertInterval(candles, WeekInMs)));
   if (dailyTrend > 0 && weeklyTrend > 0 && monthlyTrend > 0) {
-    return latestCandle.open;
+    return latestCandle.close;
   } else if (dailyTrend < 0 && weeklyTrend < 0 && monthlyTrend < 0) {
-    return -latestCandle.close;
+    return -latestCandle.open;
   } else {
     return 0;
   }
