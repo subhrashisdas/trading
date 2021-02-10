@@ -2,7 +2,7 @@ import { Candle, candleChange, convertInterval, trendCandles } from "@src/candle
 import { DayInMs, HourInMs, MinuteInMs, WeekInMs } from "@src/date";
 
 export const candlesLimit = WeekInMs;
-export const timeInterval = 5 * MinuteInMs;
+export const timeInterval = 6 * 4 * WeekInMs;
 export const name = "udts";
 export const startAt = new Date(5 * HourInMs).getTime();
 export const endAt = new Date(10 * HourInMs).getTime();
@@ -37,13 +37,13 @@ export function squareoff(price: number, candles: Candle[]): number {
   const latestCandle = candles[candles.length - 1];
   if (price > 0) {
     const percentUp = ((latestCandle.close - price) / price) * 100;
-    if (percentUp > 3 || percentUp < -0.5) {
+    if (percentUp > 3 || percentUp < -1) {
       return -latestCandle.close;
     }
     return 0;
   } else if (price < 0) {
     const percentUp = ((latestCandle.close - Math.abs(price)) / Math.abs(price)) * 100;
-    if (percentUp > 3 || percentUp < -0.5) {
+    if (percentUp > 3 || percentUp < -1) {
       return latestCandle.close;
     }
     return 0;
