@@ -33,38 +33,38 @@ export function trade(candles: Candle[]): number {
 // Validation current price can't be lower that other price
 export function squareoff(boughtPrice: number, candles: Candle[]): number {
   const currentCandle = candles[candles.length - 1];
-  const trendCandle = trendCandles(
-    convertInterval(roundOffFilterCandles(candles, 15 * MinuteInMs, 0), 15 * MinuteInMs)
-  );
-  const pivotData = calculatePivot(trendCandle);
+
+  const trendCandles = convertInterval(roundOffFilterCandles(candles, DayInMs, 1), DayInMs);
+  const pivotData = calculatePivot(trendCandles[trendCandles.length-1]);
   const currentPrice = currentCandle.close;
 
-  if (inRange(pivotData.pivotPoint, boughtPrice, currentPrice)) {
-    return 0;
+  if (inRange(pivotData.pivotPoint, Math.abs(boughtPrice), currentPrice)) {
+    return boughtPrice > 0 ? -currentPrice : currentPrice;
   }
   if (inRange(pivotData.resistance1, boughtPrice, currentPrice)) {
-    return 0;
+    return boughtPrice > 0 ? -currentPrice : currentPrice;
   }
   if (inRange(pivotData.resistance2, boughtPrice, currentPrice)) {
-    return 0;
+    return boughtPrice > 0 ? -currentPrice : currentPrice;
   }
   if (inRange(pivotData.resistance3, boughtPrice, currentPrice)) {
-    return 0;
+    return boughtPrice > 0 ? -currentPrice : currentPrice;
   }
   if (inRange(pivotData.resistance4, boughtPrice, currentPrice)) {
-    return 0;
+    return boughtPrice > 0 ? -currentPrice : currentPrice;
   }
-  if (inRange(pivotData.support1, boughtPrice, currentPrice)) {
-    return 0;
+
+  if (inRange(pivotData.support1, Math.abs(boughtPrice), currentPrice)) {
+    return boughtPrice > 0 ? -currentPrice : currentPrice;
   }
-  if (inRange(pivotData.support2, boughtPrice, currentPrice)) {
-    return 0;
+  if (inRange(pivotData.support2, Math.abs(boughtPrice), currentPrice)) {
+    return boughtPrice > 0 ? -currentPrice : currentPrice;
   }
-  if (inRange(pivotData.support3, boughtPrice, currentPrice)) {
-    return 0;
+  if (inRange(pivotData.support3, Math.abs(boughtPrice), currentPrice)) {
+    return boughtPrice > 0 ? -currentPrice : currentPrice;
   }
-  if (inRange(pivotData.support4, boughtPrice, currentPrice)) {
-    return 0;
+  if (inRange(pivotData.support4, Math.abs(boughtPrice), currentPrice)) {
+    return boughtPrice > 0 ? -currentPrice : currentPrice;
   }
-  return boughtPrice > 0 ? -currentPrice : currentPrice;
+  return 0;
 }
