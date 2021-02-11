@@ -1,8 +1,17 @@
+import { Candle } from "@src/candle";
+import { Pivot, calculatePivot } from "@src/pivot";
 import { deepStrictEqual } from "assert";
-import { calculatePivot } from "@src/pivot";
 
 export async function pivotTest() {
-  deepStrictEqual(calculatePivot({}), {
+  const candle: Candle = {
+    timestamp: Date.now(),
+    open: 90,
+    high: 95,
+    low: 85,
+    close: 98,
+    volume: 0
+  };
+  const pivotData: Pivot = {
     resistance4: 122.67,
     resistance3: 112.67,
     resistance2: 102.67,
@@ -12,5 +21,6 @@ export async function pivotTest() {
     support2: 82.67,
     support3: 72.67,
     support4: 62.67
-  });
+  };
+  deepStrictEqual(calculatePivot(candle), pivotData);
 }
