@@ -76,3 +76,18 @@ export function trendCandle(dominatingCandle: Candle, currentCandle: Candle) {
 export function candleChange(candle?: Candle) {
   return candle ? candle.close - candle.open : 0;
 }
+
+export function roundOffFilterCandles(candles: Candle[], roundOff: Milliseconds, count: number): Candle[] {
+  const newCandles: Candle[] = [];
+  const lastCandle = candles[candles.length - 1];
+  const lastCandleRounded = Math.floor(lastCandle.timestamp / roundOff);
+  const candleRoundedOff = lastCandleRounded - count;
+  for (let i = candles.length - 1; i >= 0; i--) {
+    const candle = candles[i];
+    if (Math.floor(candle.timestamp / roundOff) < candleRoundedOff) {
+      break;
+    }
+    newCandles.unshift(candles[i]);
+  }
+  return newCandles;
+}

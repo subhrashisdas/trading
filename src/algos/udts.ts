@@ -1,4 +1,4 @@
-import { Candle, candleChange, convertInterval, trendCandles } from "@src/candle";
+import { Candle, candleChange, convertInterval, roundOffFilterCandles, trendCandles } from "@src/candle";
 import { DayInMs, HourInMs, MinuteInMs, WeekInMs } from "@src/date";
 import lodash from "lodash";
 
@@ -12,15 +12,22 @@ export const endAt = new Date(10 * HourInMs).getTime();
 // TODO: Test for buy only first
 // TODO: Stoploss fix
 // TODO: PIVOT
-// TODO: 
+// TODO:
 export function trade(candles: Candle[]): number {
   const latestCandle = candles[candles.length - 1];
-  const dailyTrend = candleChange(trendCandles(lodash.takeRight(convertInterval(candles, DayInMs), 4)));
-  const weeklyTrend = candleChange(trendCandles(lodash.takeRight(convertInterval(candles, WeekInMs), 4)));
-  const monthlyTrend = candleChange(trendCandles(lodash.takeRight(convertInterval(candles, 4 * WeekInMs), 6)));
-  if (dailyTrend > 0 && weeklyTrend > 0 && monthlyTrend > 0) {
+  const fifteenMinutesTrend = candleChange(
+    trendCandles(convertInterval(roundOffFilterCandles(candles, 15 * MinuteInMs, 3), 15 * MinuteInMs))
+  );
+  const dailyTrend = candleChange(trendCandles(convertInterval(roundOffFilterCandles(candles, DayInMs, 3), DayInMs)));
+  const weeklyTrend = candleChange(
+    trendCandles(convertInterval(roundOffFilterCandles(candles, WeekInMs, 3), WeekInMs))
+  );
+  const monthlyTrend = candleChange(
+    trendCandles(convertInterval(roundOffFilterCandles(candles, WeekInMs, 12), 4 * WeekInMs))
+  );
+  if (fifteenMinutesTrend > 0 && dailyTrend > 0 && weeklyTrend > 0 && monthlyTrend > 0) {
     return latestCandle.close;
-  } else if (dailyTrend < 0 && weeklyTrend < 0 && monthlyTrend < 0) {
+  } else if (fifteenMinutesTrend < 0 && dailyTrend < 0 && weeklyTrend < 0 && monthlyTrend < 0) {
     return -latestCandle.close;
   } else {
     return 0;

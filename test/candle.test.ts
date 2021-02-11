@@ -5,6 +5,7 @@ import {
   convertInterval,
   convertOhlvcCandleToTradeJson,
   convertOhlvcCandlesToTradeJson,
+  roundOffFilterCandles,
   trendCandle,
   trendCandles
 } from "@src/candle";
@@ -44,4 +45,13 @@ export function candleChangeTest() {
   const trendCandlesFixturesAndResults: OhlvcCandle = ["2020-11-10T09:15:00+0530", 10, 95, 5, 30, 0, 0];
   const candle = convertOhlvcCandleToTradeJson(trendCandlesFixturesAndResults);
   deepStrictEqual(candleChange(candle), 20);
+}
+
+export function roundOffFilterCandlesTest() {
+  const candles = convertOhlvcCandlesToTradeJson(fifteenMinuteCandles);
+  console.log(candles.slice(candles.length - 10, candles.length).length);
+  deepStrictEqual(
+    candles.slice(candles.length - 10, candles.length),
+    roundOffFilterCandles(candles, 45 * MinuteInMs, 3)
+  );
 }
