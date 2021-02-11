@@ -113,6 +113,8 @@ interface RunAlgoEachCandleOptions {
 export async function runAlgoEachCandle(options: RunAlgoEachCandleOptions) {
   const algo = getAlgo(options.algoName);
   const algoFrom = options.candle.timestamp - algo.timeInterval;
+
+  // MinuteInMs is added because to is inclusive
   const algoTo = options.candle.timestamp + MinuteInMs;
   const algoCandles = await getOptimizedHistory(options.instrument.instrumentToken, algoFrom, algoTo);
   return inDayRange(algo.startAt, algo.endAt, options.candle.timestamp)

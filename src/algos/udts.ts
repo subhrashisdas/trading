@@ -23,10 +23,10 @@ export function trade(candles: Candle[]): number {
 
   const monthlyTrendCandle = trendCandles(convertInterval(roundOffFilterCandles(candles, WeekInMs, 12), 4 * WeekInMs));
   const monthlyTrend = candleChange(monthlyTrendCandle);
-  
-  if (fifteenMinutesTrend > 0 && dailyTrend > 0 && weeklyTrend > 0 && monthlyTrend > 0) {
+
+  if (fifteenMinutesTrend > 0 && dailyTrend > 0 && weeklyTrend > 0 && monthlyTrend > 0 && latestCandle.close > dailyTrendCandle.open) {
     return latestCandle.close;
-  } else if (fifteenMinutesTrend < 0 && dailyTrend < 0 && weeklyTrend < 0 && monthlyTrend < 0) {
+  } else if (fifteenMinutesTrend < 0 && dailyTrend < 0 && weeklyTrend < 0 && monthlyTrend < 0 && latestCandle.close < dailyTrendCandle.open) {
     return -latestCandle.close;
   } else {
     return 0;
@@ -37,23 +37,23 @@ export function trade(candles: Candle[]): number {
 export function squareoff(boughtPrice: number, candles: Candle[]): number {
   const currentCandle = candles[candles.length - 1];
 
-  const trendCandles = convertInterval(roundOffFilterCandles(candles, DayInMs, 1), DayInMs);
-  const pivotData = calculatePivot(trendCandles[trendCandles.length - 1]);
+  const dailyTrendCandle = trendCandles(convertInterval(roundOffFilterCandles(candles, DayInMs, 3), DayInMs));
+  const pivotData = calculatePivot(dailyTrendCandle);
   const currentPrice = currentCandle.close;
 
   if (inRange(pivotData.pivotPoint, Math.abs(boughtPrice), currentPrice)) {
     return boughtPrice > 0 ? -currentPrice : currentPrice;
   }
-  if (inRange(pivotData.resistance1, boughtPrice, currentPrice)) {
+  if (inRange(pivotData.resistance1, Math.abs(boughtPrice), currentPrice)) {
     return boughtPrice > 0 ? -currentPrice : currentPrice;
   }
-  if (inRange(pivotData.resistance2, boughtPrice, currentPrice)) {
+  if (inRange(pivotData.resistance2, Math.abs(boughtPrice), currentPrice)) {
     return boughtPrice > 0 ? -currentPrice : currentPrice;
   }
-  if (inRange(pivotData.resistance3, boughtPrice, currentPrice)) {
+  if (inRange(pivotData.resistance3, Math.abs(boughtPrice), currentPrice)) {
     return boughtPrice > 0 ? -currentPrice : currentPrice;
   }
-  if (inRange(pivotData.resistance4, boughtPrice, currentPrice)) {
+  if (inRange(pivotData.resistance4, Math.abs(boughtPrice), currentPrice)) {
     return boughtPrice > 0 ? -currentPrice : currentPrice;
   }
 
