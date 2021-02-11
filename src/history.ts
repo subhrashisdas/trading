@@ -52,11 +52,7 @@ function filePath(instrumentId: number) {
   return path.join(folderLocation, fileName(instrumentId));
 }
 
-export async function getOptimizedHistory(
-  instrumentId: number,
-  from: Milliseconds,
-  to: Milliseconds
-): Promise<Candle[]> {
+export async function getOptimizedHistory(instrumentId: number, from: Milliseconds, to: Milliseconds): Promise<Candle[]> {
   const instrumentIdFilePath = filePath(instrumentId);
 
   if (await exists(instrumentIdFilePath)) {

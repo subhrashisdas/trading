@@ -11,16 +11,19 @@ export const endAt = new Date(10 * HourInMs).getTime();
 
 export function trade(candles: Candle[]): number {
   const latestCandle = candles[candles.length - 1];
-  const fifteenMinutesTrend = candleChange(
-    trendCandles(convertInterval(roundOffFilterCandles(candles, 15 * MinuteInMs, 3), 15 * MinuteInMs))
-  );
-  const dailyTrend = candleChange(trendCandles(convertInterval(roundOffFilterCandles(candles, DayInMs, 3), DayInMs)));
-  const weeklyTrend = candleChange(
-    trendCandles(convertInterval(roundOffFilterCandles(candles, WeekInMs, 3), WeekInMs))
-  );
-  const monthlyTrend = candleChange(
-    trendCandles(convertInterval(roundOffFilterCandles(candles, WeekInMs, 12), 4 * WeekInMs))
-  );
+
+  const fifteenMinutesTrendCandle = trendCandles(convertInterval(roundOffFilterCandles(candles, 15 * MinuteInMs, 3), 15 * MinuteInMs));
+  const fifteenMinutesTrend = candleChange(fifteenMinutesTrendCandle);
+
+  const dailyTrendCandle = trendCandles(convertInterval(roundOffFilterCandles(candles, DayInMs, 3), DayInMs));
+  const dailyTrend = candleChange(dailyTrendCandle);
+
+  const weeklyTrendCandle = trendCandles(convertInterval(roundOffFilterCandles(candles, WeekInMs, 3), WeekInMs));
+  const weeklyTrend = candleChange(weeklyTrendCandle);
+
+  const monthlyTrendCandle = trendCandles(convertInterval(roundOffFilterCandles(candles, WeekInMs, 12), 4 * WeekInMs));
+  const monthlyTrend = candleChange(monthlyTrendCandle);
+  
   if (fifteenMinutesTrend > 0 && dailyTrend > 0 && weeklyTrend > 0 && monthlyTrend > 0) {
     return latestCandle.close;
   } else if (fifteenMinutesTrend < 0 && dailyTrend < 0 && weeklyTrend < 0 && monthlyTrend < 0) {
@@ -35,7 +38,7 @@ export function squareoff(boughtPrice: number, candles: Candle[]): number {
   const currentCandle = candles[candles.length - 1];
 
   const trendCandles = convertInterval(roundOffFilterCandles(candles, DayInMs, 1), DayInMs);
-  const pivotData = calculatePivot(trendCandles[trendCandles.length-1]);
+  const pivotData = calculatePivot(trendCandles[trendCandles.length - 1]);
   const currentPrice = currentCandle.close;
 
   if (inRange(pivotData.pivotPoint, Math.abs(boughtPrice), currentPrice)) {

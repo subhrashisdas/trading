@@ -83,15 +83,7 @@ export async function runAlgo(options: RunAlgoOptions) {
       }
 
       if (newPrice !== 0) {
-        logEvents(
-          candle.timestamp,
-          newPrice,
-          profit,
-          totalProfitCount,
-          totalLossCount,
-          profitByLossCountRatio,
-          profitByLossValueRatio
-        );
+        logEvents(candle.timestamp, newPrice, profit, totalProfitCount, totalLossCount, profitByLossCountRatio, profitByLossValueRatio);
         if (options.isLive) {
           await placeOrder({
             instrument: instrument,

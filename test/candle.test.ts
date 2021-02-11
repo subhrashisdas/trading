@@ -50,8 +50,5 @@ export function candleChangeTest() {
 export function roundOffFilterCandlesTest() {
   const candles = convertOhlvcCandlesToTradeJson(fifteenMinuteCandles);
   console.log(candles.slice(candles.length - 10, candles.length).length);
-  deepStrictEqual(
-    candles.slice(candles.length - 10, candles.length),
-    roundOffFilterCandles(candles, 45 * MinuteInMs, 3)
-  );
+  deepStrictEqual(candles.slice(candles.length - 10, candles.length), roundOffFilterCandles(candles, 45 * MinuteInMs, 3));
 }

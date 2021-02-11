@@ -25,8 +25,5 @@ async function addTimeToNow(ms: number) {
 
 export async function functionCacheTest() {
   const now = Date.now();
-  deepStrictEqual(
-    await functionCache(addTimeToNow, [1000], now + 1000),
-    await functionCache(addTimeToNow, [1000], now + 1000)
-  );
+  deepStrictEqual(await functionCache(addTimeToNow, [1000], now + 1000), await functionCache(addTimeToNow, [1000], now + 1000));
 }
