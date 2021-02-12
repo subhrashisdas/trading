@@ -12,21 +12,40 @@ export const endAt = new Date(10 * HourInMs).getTime();
 export function trade(candles: Candle[]): number {
   const latestCandle = candles[candles.length - 1];
 
-  const fifteenMinutesTrendCandle = trendCandles(convertInterval(roundOffFilterCandles(candles, 15 * MinuteInMs, 3), 15 * MinuteInMs));
+  const fifteenMinutesCandles = convertInterval(roundOffFilterCandles(candles, 15 * MinuteInMs, 3), 15 * MinuteInMs);
+  const fifteenMinutesTrendCandle = trendCandles(fifteenMinutesCandles);
   const fifteenMinutesTrend = candleChange(fifteenMinutesTrendCandle);
 
-  const dailyTrendCandle = trendCandles(convertInterval(roundOffFilterCandles(candles, DayInMs, 3), DayInMs));
+  const dailyCandles = convertInterval(roundOffFilterCandles(candles, DayInMs, 3), DayInMs);
+  const dailyTrendCandle = trendCandles(dailyCandles);
   const dailyTrend = candleChange(dailyTrendCandle);
 
-  const weeklyTrendCandle = trendCandles(convertInterval(roundOffFilterCandles(candles, WeekInMs, 3), WeekInMs));
+  const weeklyCandles = convertInterval(roundOffFilterCandles(candles, WeekInMs, 3), WeekInMs);
+  const weeklyTrendCandle = trendCandles(weeklyCandles);
   const weeklyTrend = candleChange(weeklyTrendCandle);
 
-  const monthlyTrendCandle = trendCandles(convertInterval(roundOffFilterCandles(candles, WeekInMs, 12), 4 * WeekInMs));
+  const monthlyCandles = convertInterval(roundOffFilterCandles(candles, WeekInMs, 12), 4 * WeekInMs);
+  const monthlyTrendCandle = trendCandles(monthlyCandles);
   const monthlyTrend = candleChange(monthlyTrendCandle);
+
+  console.log(
+    JSON.stringify({
+      fifteenMinutesCandles,
+      dailyCandles,
+      weeklyCandles,
+      monthlyCandles
+    })
+  );
 
   if (fifteenMinutesTrend > 0 && dailyTrend > 0 && weeklyTrend > 0 && monthlyTrend > 0 && latestCandle.close > dailyTrendCandle.open) {
     return latestCandle.close;
-  } else if (fifteenMinutesTrend < 0 && dailyTrend < 0 && weeklyTrend < 0 && monthlyTrend < 0 && latestCandle.close < dailyTrendCandle.open) {
+  } else if (
+    fifteenMinutesTrend < 0 &&
+    dailyTrend < 0 &&
+    weeklyTrend < 0 &&
+    monthlyTrend < 0 &&
+    latestCandle.close < dailyTrendCandle.open
+  ) {
     return -latestCandle.close;
   } else {
     return 0;
