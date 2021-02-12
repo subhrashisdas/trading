@@ -33,7 +33,11 @@ export function trade(candles: Candle[]): number {
       fifteenMinutesCandles,
       dailyCandles,
       weeklyCandles,
-      monthlyCandles
+      monthlyCandles,
+      fifteenMinutesTrendCandle,
+      dailyTrendCandle,
+      weeklyTrendCandle,
+      monthlyTrendCandle
     })
   );
 

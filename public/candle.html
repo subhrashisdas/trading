@@ -29,6 +29,11 @@
         drawChart("chart_div_daily", allViewerData.dailyCandles);
         drawChart("chart_div_weekly", allViewerData.weeklyCandles);
         drawChart("chart_div_monthly", allViewerData.monthlyCandles);
+
+        drawChart("chart_div_15min_trend", [allViewerData.fifteenMinutesTrendCandle]);
+        drawChart("chart_div_daily_trend", [allViewerData.dailyTrendCandle]);
+        drawChart("chart_div_weekly_trend", [allViewerData.weeklyTrendCandle]);
+        drawChart("chart_div_monthly_trend", [allViewerData.monthlyTrendCandle]);
       }
     </script>
   </head>
@@ -44,16 +49,35 @@
       <div id="chart_div_15min" style="width: 900px; height: 500px"></div>
     </section>
     <section>
+        <header><h2>Fifteen Minutes Trend</h2></header>
+        <div id="chart_div_15min_trend" style="width: 900px; height: 500px"></div>
+    </section>
+
+    <section>
       <header><h2>Daily Candle</h2></header>
       <div id="chart_div_daily" style="width: 900px; height: 500px"></div>
     </section>
+    <section>
+        <header><h2>Daily Trend</h2></header>
+        <div id="chart_div_daily_trend" style="width: 900px; height: 500px"></div>
+    </section>
+
     <section>
       <header><h2>Weekly Candle</h2></header>
       <div id="chart_div_weekly" style="width: 900px; height: 500px"></div>
     </section>
     <section>
+        <header><h2>Weekly Trend</h2></header>
+        <div id="chart_div_weekly_trend" style="width: 900px; height: 500px"></div>
+    </section>
+
+    <section>
       <header><h2>Monthly Candle</h2></header>
       <div id="chart_div_monthly" style="width: 900px; height: 500px"></div>
     </section>
+    <section>
+        <header><h2>Monthly Trend</h2></header>
+        <div id="chart_div_monthly_trend" style="width: 900px; height: 500px"></div>
+      </section>
   </body>
 </html>
