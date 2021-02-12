@@ -117,9 +117,10 @@ export async function runAlgoEachCandle(options: RunAlgoEachCandleOptions) {
   // MinuteInMs is added because to is inclusive
   const algoTo = options.candle.timestamp + MinuteInMs;
   const algoCandles = await getOptimizedHistory(options.instrument.instrumentToken, algoFrom, algoTo);
+  // console.log(inDayRange(algo.startAt, algo.endAt, options.candle.timestamp));
   return inDayRange(algo.startAt, algo.endAt, options.candle.timestamp)
     ? options.price === 0
       ? algo.trade(algoCandles)
       : algo.squareoff(options.price, algoCandles)
-    : -options.price;
+    : -options.candle.close;
 }
