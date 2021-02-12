@@ -7,7 +7,7 @@ export const candlesLimit = WeekInMs;
 export const timeInterval = 6 * 4 * WeekInMs;
 export const name = "udts";
 export const startAt = new Date(5 * HourInMs).getTime();
-export const endAt = new Date(10 * HourInMs).getTime();
+export const endAt = new Date(9.5 * HourInMs).getTime();
 
 export function trade(candles: Candle[]): number {
   const latestCandle = candles[candles.length - 1];

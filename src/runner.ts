@@ -28,12 +28,12 @@ function logEvents(
   console.log(
     [
       localDateTime,
-      "₹" + price.toFixed(2),
-      "P = ₹" + profit.toFixed(2),
+      `₹${price > 0 ? '+' : ''}` + price.toFixed(2),
+      "P&L = ₹" + profit.toFixed(2),
       "P = " + totalProfitCount,
       "L = " + totalLossCount,
-      "P/L = " + profitByLossCountRatio.toFixed(2),
-      "P/L = ₹" + profitByLossValueRatio.toFixed(2)
+      "P:L = " + profitByLossCountRatio.toFixed(2),
+      "P:L = ₹" + Math.abs(profitByLossValueRatio).toFixed(2)
     ].join("\t\t")
   );
 }
@@ -117,10 +117,12 @@ export async function runAlgoEachCandle(options: RunAlgoEachCandleOptions) {
   // MinuteInMs is added because to is inclusive
   const algoTo = options.candle.timestamp + MinuteInMs;
   const algoCandles = await getOptimizedHistory(options.instrument.instrumentToken, algoFrom, algoTo);
-  // console.log(inDayRange(algo.startAt, algo.endAt, options.candle.timestamp));
+  console.log(new Date(options.candle.timestamp).toLocaleString(), ' in_range ', inDayRange(algo.startAt, algo.endAt, options.candle.timestamp), 'close_price', options.candle.close);
   return inDayRange(algo.startAt, algo.endAt, options.candle.timestamp)
     ? options.price === 0
       ? algo.trade(algoCandles)
       : algo.squareoff(options.price, algoCandles)
-    : -options.candle.close;
+    : options.price !== 0
+      ? -options.candle.close
+      : 0;
 }
