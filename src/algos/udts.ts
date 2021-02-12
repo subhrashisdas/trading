@@ -28,18 +28,18 @@ export function trade(candles: Candle[]): number {
   const monthlyTrendCandle = trendCandles(monthlyCandles);
   const monthlyTrend = candleChange(monthlyTrendCandle);
 
-  console.log(
-    JSON.stringify({
-      fifteenMinutesCandles,
-      dailyCandles,
-      weeklyCandles,
-      monthlyCandles,
-      fifteenMinutesTrendCandle,
-      dailyTrendCandle,
-      weeklyTrendCandle,
-      monthlyTrendCandle
-    })
-  );
+  // console.log(
+  //   JSON.stringify({
+  //     fifteenMinutesCandles,
+  //     dailyCandles,
+  //     weeklyCandles,
+  //     monthlyCandles,
+  //     fifteenMinutesTrendCandle,
+  //     dailyTrendCandle,
+  //     weeklyTrendCandle,
+  //     monthlyTrendCandle
+  //   })
+  // );
 
   if (fifteenMinutesTrend > 0 && dailyTrend > 0 && weeklyTrend > 0 && monthlyTrend > 0 && latestCandle.close > dailyTrendCandle.open) {
     return latestCandle.close;
@@ -59,38 +59,52 @@ export function trade(candles: Candle[]): number {
 // Validation current price can't be lower that other price
 export function squareoff(boughtPrice: number, candles: Candle[]): number {
   const currentCandle = candles[candles.length - 1];
-
-  const dailyTrendCandle = trendCandles(convertInterval(roundOffFilterCandles(candles, DayInMs, 3), DayInMs));
-  const pivotData = calculatePivot(dailyTrendCandle);
   const currentPrice = currentCandle.close;
 
-  if (inRange(pivotData.pivotPoint, Math.abs(boughtPrice), currentPrice)) {
-    return boughtPrice > 0 ? -currentPrice : currentPrice;
-  }
-  if (inRange(pivotData.resistance1, Math.abs(boughtPrice), currentPrice)) {
-    return boughtPrice > 0 ? -currentPrice : currentPrice;
-  }
-  if (inRange(pivotData.resistance2, Math.abs(boughtPrice), currentPrice)) {
-    return boughtPrice > 0 ? -currentPrice : currentPrice;
-  }
-  if (inRange(pivotData.resistance3, Math.abs(boughtPrice), currentPrice)) {
-    return boughtPrice > 0 ? -currentPrice : currentPrice;
-  }
-  if (inRange(pivotData.resistance4, Math.abs(boughtPrice), currentPrice)) {
-    return boughtPrice > 0 ? -currentPrice : currentPrice;
+  const dailyTrendCandle = trendCandles(convertInterval(roundOffFilterCandles(candles, DayInMs, 3), DayInMs));
+  const stopLossPrice = dailyTrendCandle.open;
+
+  if (boughtPrice < 0 && -boughtPrice > stopLossPrice) {
+    return currentPrice;
   }
 
-  if (inRange(pivotData.support1, Math.abs(boughtPrice), currentPrice)) {
-    return boughtPrice > 0 ? -currentPrice : currentPrice;
+  if (boughtPrice > 0 && boughtPrice < stopLossPrice) {
+    return -currentPrice;
   }
-  if (inRange(pivotData.support2, Math.abs(boughtPrice), currentPrice)) {
-    return boughtPrice > 0 ? -currentPrice : currentPrice;
+
+  const pivotData = calculatePivot(dailyTrendCandle);
+
+  if (boughtPrice > 0 && currentPrice > boughtPrice) {
+    if (boughtPrice < pivotData.resistance1 && currentPrice >= pivotData.resistance1) {
+      return -currentPrice;
+    }
+    if (boughtPrice < pivotData.resistance2 && currentPrice >= pivotData.resistance2) {
+      return -currentPrice;
+    }
+    if (boughtPrice < pivotData.resistance3 && currentPrice >= pivotData.resistance3) {
+      return -currentPrice;
+    }
+    if (boughtPrice < pivotData.resistance4 && currentPrice >= pivotData.resistance4) {
+      return -currentPrice;
+    }
+    return 0;
   }
-  if (inRange(pivotData.support3, Math.abs(boughtPrice), currentPrice)) {
-    return boughtPrice > 0 ? -currentPrice : currentPrice;
+
+  if (boughtPrice < 0 && currentPrice > boughtPrice) {
+    if (-boughtPrice > pivotData.support1 && currentPrice <= pivotData.support1) {
+      return currentPrice;
+    }
+    if (-boughtPrice > pivotData.support2 && currentPrice <= pivotData.support2) {
+      return currentPrice;
+    }
+    if (-boughtPrice > pivotData.support3 && currentPrice <= pivotData.support3) {
+      return currentPrice;
+    }
+    if (-boughtPrice > pivotData.support4 && currentPrice <= pivotData.support4) {
+      return currentPrice;
+    }
+    return 0;
   }
-  if (inRange(pivotData.support4, Math.abs(boughtPrice), currentPrice)) {
-    return boughtPrice > 0 ? -currentPrice : currentPrice;
-  }
+
   return 0;
 }
