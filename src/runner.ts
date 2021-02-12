@@ -76,10 +76,13 @@ export async function runAlgo(options: RunAlgoOptions) {
         profitByLossCountRatio = totalProfitCount / (totalLossCount + 1);
         profitByLossValueRatio = totalProfitValue / (totalLossValue + 1);
 
+        console.log('----',)
         oldPrice = 0;
-      } else if (newPrice !== 0) {
+      } else if (oldPrice ===0 && newPrice !== 0) {
         profit = 0;
         oldPrice = newPrice;
+      } else if ((oldPrice > 0 && newPrice > 0) || (oldPrice < 0 && newPrice < 0)) {
+        console.log('---------- This should not occur');
       }
 
       if (newPrice !== 0) {
@@ -126,3 +129,5 @@ export async function runAlgoEachCandle(options: RunAlgoEachCandleOptions) {
       ? -options.candle.close
       : 0;
 }
+
+// 20/01/2021, 15:15:00
