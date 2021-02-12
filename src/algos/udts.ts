@@ -41,14 +41,14 @@ export function trade(candles: Candle[]): number {
   //   })
   // );
 
-  if (fifteenMinutesTrend > 0 && dailyTrend > 0 && weeklyTrend > 0 && monthlyTrend > 0 && latestCandle.close > dailyTrendCandle.open) {
+  if (fifteenMinutesTrend > 0 && dailyTrend > 0 && weeklyTrend > 0 && monthlyTrend > 0 && dailyTrendCandle.open < latestCandle.open) {
     return latestCandle.close;
   } else if (
     fifteenMinutesTrend < 0 &&
     dailyTrend < 0 &&
     weeklyTrend < 0 &&
     monthlyTrend < 0 &&
-    latestCandle.close < dailyTrendCandle.open
+    dailyTrendCandle.open > latestCandle.open
   ) {
     return -latestCandle.close;
   } else {
